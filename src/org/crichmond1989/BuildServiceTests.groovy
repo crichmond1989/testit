@@ -1,12 +1,11 @@
 package org.crichmond1989
 
 import groovy.lang.Script
-import groovy.util.GroovyTestCase
 import org.junit.Test
 
 import org.crichmond1989.BuildService
 
-class BuildServiceTests extends GroovyTestCase {
+class BuildServiceTests {
     Script script
 
     BuildServiceTests() {
