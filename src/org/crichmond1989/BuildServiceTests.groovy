@@ -1,7 +1,7 @@
 package org.crichmond1989
 
 import groovy.lang.Script
-import static org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Test
 
 import org.crichmond1989.BuildService
@@ -26,7 +26,7 @@ class BuildServiceTests {
 
         service.buildHelloNetCore("master")
 
-        assertEquals(script.env.isRelease, true)
+        Assert.assertEquals(script.env.isRelease, true)
     }
 
     @Test
@@ -35,7 +35,7 @@ class BuildServiceTests {
 
         service.buildHelloNetCore("dev")
 
-        assertEquals(script.env.isRelease, false)
+        Assert.assertEquals(script.env.isRelease, false)
     }
 
     @Test
@@ -47,6 +47,10 @@ class BuildServiceTests {
 
     @Test
     void shouldPass() {
-        
+    }
+
+    @Test
+    void shouldFail() {
+        Assert.fail("hey it failed")
     }
 }
