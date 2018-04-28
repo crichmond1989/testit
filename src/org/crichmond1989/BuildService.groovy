@@ -19,4 +19,8 @@ class BuildService implements Serializable {
 
         script.bat("dotnet restore")
     }
+
+    void dummy(String branch = "master") {
+        script.env.isRelease = branch == "master"
+    }
 }

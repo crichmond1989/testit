@@ -37,4 +37,11 @@ class BuildServiceTests {
 
         assertEquals(script.env.isRelease, false)
     }
+
+    @Test
+    void smokeTestDummy() {
+        final service = new BuildService(script)
+
+        service.dummy()
+    }
 }
