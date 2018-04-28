@@ -5,22 +5,23 @@ import org.junit.Assert
 import org.junit.Test
 
 import org.crichmond1989.BuildService
+import org.crichmond1989.FunTest
 
 class BuildServiceTests implements Serializable {
     Script script
 
-    BuildServiceTests() {
-        //this.script = System.properties.script
+    BuildServiceTests(Script script = null) {
+        this.script = script
     }
 
-    @Test
+    @FunTest
     void smokeTest() {
         final service = new BuildService(script)
 
         service.buildHelloNetCore()
     }
 
-    @Test
+    @FunTest
     void ensureIsReleaseWhenMaster() {
         final service = new BuildService(script)
 
@@ -29,7 +30,7 @@ class BuildServiceTests implements Serializable {
         Assert.assertEquals(script.env.isRelease, true)
     }
 
-    @Test
+    @FunTest
     void ensureIsNotReleaseWhenNotMaster() {
         final service = new BuildService(script)
 
@@ -38,7 +39,7 @@ class BuildServiceTests implements Serializable {
         Assert.assertEquals(script.env.isRelease, false)
     }
 
-    @Test
+    @FunTest
     void smokeTestDummy() {
         final service = new BuildService(script)
 
@@ -46,12 +47,10 @@ class BuildServiceTests implements Serializable {
     }
 
     @Test
-    @NonCPS
     void shouldPass() {
     }
 
     @Test
-    @NonCPS
     void shouldFail() {
         Assert.fail("hey it failed")
     }

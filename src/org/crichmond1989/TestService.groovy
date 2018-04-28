@@ -4,6 +4,7 @@ import groovy.lang.Script
 import org.junit.runner.JUnitCore
 
 import org.crichmond1989.BuildServiceTests
+import org.crichmond1989.FunTest
 
 class TestService implements Serializable {
     Script script
