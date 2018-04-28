@@ -6,7 +6,7 @@ import org.junit.Test
 
 import org.crichmond1989.BuildService
 
-class BuildServiceTests {
+class BuildServiceTests implements Serializable {
     Script script
 
     BuildServiceTests() {
