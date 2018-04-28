@@ -1,7 +1,7 @@
 package org.crichmond1989
 
 import groovy.lang.Script
-import org.junit.Assert.assertEquals
+import static org.junit.Assert.assertEquals
 import org.junit.Test
 
 import org.crichmond1989.BuildService
