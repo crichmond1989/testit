@@ -1,6 +1,7 @@
 package org.crichmond1989
 
 import groovy.lang.Script
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 import org.crichmond1989.BuildService
@@ -25,7 +26,7 @@ class BuildServiceTests {
 
         service.buildHelloNetCore("master")
 
-        assert script.env.isRelease
+        assertEquals(script.env.isRelease, true)
     }
 
     @Test
@@ -34,6 +35,6 @@ class BuildServiceTests {
 
         service.buildHelloNetCore("dev")
 
-        assert !script.env.isRelease
+        assertEquals(script.env.isRelease, false)
     }
 }
