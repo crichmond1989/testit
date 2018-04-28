@@ -46,10 +46,12 @@ class BuildServiceTests implements Serializable {
     }
 
     @Test
+    @NonCPS
     void shouldPass() {
     }
 
     @Test
+    @NonCPS
     void shouldFail() {
         Assert.fail("hey it failed")
     }
