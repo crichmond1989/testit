@@ -10,7 +10,7 @@ class BuildServiceTests {
     Script script
 
     BuildServiceTests() {
-        this.script = System.properties.script
+        //this.script = System.properties.script
     }
 
     @Test
