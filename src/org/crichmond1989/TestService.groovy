@@ -15,7 +15,9 @@ class TestService implements Serializable {
     void execute() {
         System.properties.script = script
 
-        final result = JUnitCore.run(
+        final jUnit = new JUnitCore()
+
+        final result = jUnit.run(
             BuildServiceTests.class
         )
 
