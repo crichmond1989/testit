@@ -44,4 +44,9 @@ class BuildServiceTests {
 
         service.dummy()
     }
+
+    @Test
+    void shouldPass() {
+        
+    }
 }
