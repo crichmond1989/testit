@@ -21,9 +21,13 @@ class TestService implements Serializable {
             BuildServiceTests.class
         )
 
-        if (result.wasSuccessful())
+        if (result.wasSuccessful()) {
             script.println("SUCCESS!!!")
-        else
-            result.getFailures().each { script.println(it.dump()) }
+        } else {
+            result.getFailures().each {
+                script.println(it.dump())
+                script.println(it.getException().dump())
+            }
+        }
     }
 }
