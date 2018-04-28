@@ -10,10 +10,6 @@ import org.crichmond1989.FunTest
 class BuildServiceTests implements Serializable {
     Script script
 
-    BuildServiceTests(Script script = null) {
-        this.script = script
-    }
-
     @FunTest
     void smokeTest() {
         final service = new BuildService(script)
