@@ -40,7 +40,7 @@ class ExampleServiceTests implements Serializable {
     void unitSmokeTest() {
         final mock = new MockScript()
 
-        mock.metaClass.env = []
+        mock.metaClass.env = [:]
         mock.metaClass.git = { _ -> }
         mock.metaClass.sh = { _ -> }
 
