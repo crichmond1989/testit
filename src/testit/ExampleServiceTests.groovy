@@ -1,6 +1,10 @@
 package testit
 
 import groovy.lang.Script
+
+@Grab('junit:junit:4.12')
+@Grab('org.hamcrest:hamcrest-core:1.3')
+@Grab('org.hamcrest:hamcrest-library:1.3')
 import org.junit.Assert
 
 import testit.ExampleService
@@ -24,7 +28,7 @@ class ExampleServiceTests implements Serializable {
 
         service.build("master")
 
-        Assert.assertEquals("true", script.env.isRelease)
+        assert script.env.isRelease == "true"
     }
 
     @FunTest
@@ -33,11 +37,11 @@ class ExampleServiceTests implements Serializable {
 
         service.build("dev")
 
-        Assert.assertEquals("false", script.env.isRelease)
+        assert script.env.isRelease == "false"
     }
 
     @UnitTest
-    void unitSmokeTest() {
+    void mockEnsureIsReleaseWhenMaster() {
         final mock = new MockScript()
 
         mock.metaClass.env = [:]
@@ -48,6 +52,21 @@ class ExampleServiceTests implements Serializable {
 
         service.build()
 
-        Assert.assertEquals("true", mock.env.isRelease)
+        assert mock.env.isRelease == "true"
+    }
+
+    @UnitTest
+    void mockEnsureIsNotReleaseWhenNotMaster() {
+        final mock = new MockScript()
+
+        mock.metaClass.env = [:]
+        mock.metaClass.git = { _ -> }
+        mock.metaClass.sh = { _ -> }
+
+        final service = new ExampleService(mock)
+
+        service.build("dev")
+
+        assert mock.env.isRelease == "false"
     }
 }

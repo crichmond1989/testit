@@ -1,32 +1,18 @@
 package testit
 
+import testit.StepCategory
+
 class TestResult {
-    Boolean success
-    String message
-    Throwable error
+    String classname
+    String name
+    List<StepResult> steps = []
 
-    TestResult(Map args) {
-        success = args.success
-        message = args.message
-        error = args.error
-    }
+    String getStatus() {
+        if (!steps)
+            return "pass"
 
-    static TestResult Passed() {
-        return new TestResult(success: true)
-    }
+        final hasErrorOrFailure = steps.any { it.category == StepCategory.Error || it.category == StepCategory.Failure }
 
-    static TestResult Failed(String message) {
-        return new TestResult(
-            success: false,
-            message: message
-        )
-    }
-
-    static TestResult Failed(Throwable error) {
-        return new TestResult(
-            success: false,
-            message: error.getMessage(),
-            error: error
-        )
+        return hasErrorOrFailure ? "fail" : "pass"
     }
 }
