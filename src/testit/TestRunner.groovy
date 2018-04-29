@@ -1,6 +1,6 @@
 package testit
 
-import java.lang.Annotation
+import java.lang.annotation.Annotation
 import org.junit.After
 import org.junit.Before
 
