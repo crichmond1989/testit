@@ -6,7 +6,7 @@ class TestResult {
     Throwable error
 
     TestResult(Map args) {
-        status = args.status
+        success = args.success
         message = args.message
         error = args.error
     }
