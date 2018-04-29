@@ -17,6 +17,6 @@ class ExampleService implements Serializable {
             url: "https://github.com/crichmond1989/hellonetcore"
         )
 
-        script.bat("dotnet restore")
+        script.sh("dotnet restore")
     }
 }
