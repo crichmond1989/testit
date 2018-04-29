@@ -5,6 +5,7 @@ import org.junit.Assert
 
 import testit.ExampleService
 import testit.FunTest
+import testit.MockScript
 import testit.UnitTest
 
 class ExampleServiceTests implements Serializable {
@@ -23,7 +24,7 @@ class ExampleServiceTests implements Serializable {
 
         service.build("master")
 
-        Assert.assertEquals(script.env.isRelease, true)
+        Assert.assertEquals("true", script.env.isRelease)
     }
 
     @FunTest
@@ -32,15 +33,21 @@ class ExampleServiceTests implements Serializable {
 
         service.build("dev")
 
-        Assert.assertEquals(script.env.isRelease, false)
+        Assert.assertEquals("false", script.env.isRelease)
     }
 
     @UnitTest
-    void shouldPass() {
-    }
+    void unitSmokeTest() {
+        final mock = new MockScript()
 
-    @UnitTest
-    void shouldFail() {
-        Assert.fail("hey it failed")
+        mock.metaClass.env = []
+        mock.metaClass.git = { _ -> }
+        mock.metaClass.sh = { _ -> }
+
+        final service = new ExampleService(mock)
+
+        service.build()
+
+        Assert.assertEquals("true", mock.env.isRelease)
     }
 }
