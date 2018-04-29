@@ -3,7 +3,7 @@ package testit
 import groovy.lang.Script
 import org.junit.Assert
 
-import testit.BuildService
+import testit.ExampleService
 import testit.FunTest
 import testit.UnitTest
 
@@ -12,34 +12,27 @@ class ExampleServiceTests implements Serializable {
 
     @FunTest
     void smokeTest() {
-        final service = new BuildService(script)
+        final service = new ExampleService(script)
 
-        service.buildHelloNetCore()
+        service.build()
     }
 
     @FunTest
     void ensureIsReleaseWhenMaster() {
-        final service = new BuildService(script)
+        final service = new ExampleService(script)
 
-        service.buildHelloNetCore("master")
+        service.build("master")
 
         Assert.assertEquals(script.env.isRelease, true)
     }
 
     @FunTest
     void ensureIsNotReleaseWhenNotMaster() {
-        final service = new BuildService(script)
+        final service = new ExampleService(script)
 
-        service.buildHelloNetCore("dev")
+        service.build("dev")
 
         Assert.assertEquals(script.env.isRelease, false)
-    }
-
-    @FunTest
-    void smokeTestDummy() {
-        final service = new BuildService(script)
-
-        service.dummy()
     }
 
     @UnitTest
