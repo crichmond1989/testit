@@ -2,11 +2,6 @@ package testit
 
 import groovy.lang.Script
 
-@Grab('junit:junit:4.12')
-@Grab('org.hamcrest:hamcrest-core:1.3')
-@Grab('org.hamcrest:hamcrest-library:1.3')
-import org.junit.Assert
-
 import testit.ExampleService
 import testit.FunTest
 import testit.MockScript
@@ -52,7 +47,7 @@ class ExampleServiceTests implements Serializable {
 
         service.build()
 
-        assert mock.env.isRelease == "true"
+        assert mock.env.isRelease == "atrue"
     }
 
     @UnitTest
