@@ -1,13 +1,13 @@
-package org.crichmond1989
+package testit
 
 import groovy.lang.Script
 import org.junit.Assert
-import org.junit.Test
 
-import org.crichmond1989.BuildService
-import org.crichmond1989.FunTest
+import testit.BuildService
+import testit.FunTest
+import testit.UnitTest
 
-class BuildServiceTests implements Serializable {
+class ExampleServiceTests implements Serializable {
     Script script
 
     @FunTest
@@ -42,11 +42,11 @@ class BuildServiceTests implements Serializable {
         service.dummy()
     }
 
-    @Test
+    @UnitTest
     void shouldPass() {
     }
 
-    @Test
+    @UnitTest
     void shouldFail() {
         Assert.fail("hey it failed")
     }

@@ -1,15 +1,15 @@
-package org.crichmond1989
+package testit
 
 import groovy.lang.Script
 
-class BuildService implements Serializable {
+class ExampleService implements Serializable {
     Script script
 
-    BuildService(Script script) {
+    ExampleService(Script script) {
         this.script = script
     }
 
-    void buildHelloNetCore(String branch = "master") {
+    void build(String branch = "master") {
         script.env.isRelease = branch == "master"
         
         script.git(
@@ -18,9 +18,5 @@ class BuildService implements Serializable {
         )
 
         script.bat("dotnet restore")
-    }
-
-    void dummy(String branch = "master") {
-        script.env.isRelease = branch == "master"
     }
 }
