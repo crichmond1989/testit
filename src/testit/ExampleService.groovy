@@ -10,7 +10,7 @@ class ExampleService implements Serializable {
     }
 
     void build(String branch = "master") {
-        script.env.isRelease = branch == "master"
+        script.env.isRelease = (branch == "master") as String
         
         script.git(
             branch: branch,
