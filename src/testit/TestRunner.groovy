@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation
 import org.junit.After
 import org.junit.Before
 
+import testit.CpsPrintStream
 import testit.StepResult
 import testit.TestResult
 
@@ -41,8 +42,6 @@ class TestRunner implements Serializable {
         return testUtility(source, Before.class)
     }
 
-
-
     List<StepResult> testBody(Object source, String method) {
         final testStdBuf = new ByteArrayOutputStream()
         final originalOut = System.out
@@ -50,8 +49,8 @@ class TestRunner implements Serializable {
         final testErrBuf = new ByteArrayOutputStream()
         final originalErr = System.err
 
-        System.out = new PrintStream(testStdBuf)
-        System.err = new PrintStream(testErrBuf)
+        System.out = new CpsPrintStream(testStdBuf)
+        System.err = new CpsPrintStream(testErrBuf)
 
         def catchResult
         
