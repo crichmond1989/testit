@@ -1,12 +1,13 @@
 package testit
 
+@Grab("com.cloudbees:groovy-cps:1.1")
 @Grab('junit:junit:4.12')
 
+import com.cloudbees.groovy.cps.NonCPS
 import java.lang.annotation.Annotation
 import org.junit.After
 import org.junit.Before
 
-import testit.CpsPrintStream
 import testit.StepResult
 import testit.TestResult
 
@@ -42,15 +43,35 @@ class TestRunner implements Serializable {
         return testUtility(source, Before.class)
     }
 
-    List<StepResult> testBody(Object source, String method) {
-        final testStdBuf = new ByteArrayOutputStream()
-        final originalOut = System.out
+    @NonCPS
+    ByteArrayOutputStream captureOut() {
+        final buf = new ByteArrayOutputStream()
 
-        final testErrBuf = new ByteArrayOutputStream()
+        System.out = new PrintStream(buf)
+
+        return buf
+    }
+
+    @NonCPS
+    ByteArrayOutputStream captureErr() {
+        final buf = new ByteArrayOutputStream()
+
+        System.err = new PrintStream(buf)
+
+        return buf
+    }
+
+    @NonCPS
+    void restoreIO() {
+
+    }
+
+    List<StepResult> testBody(Object source, String method) {
+        final originalOut = System.out
         final originalErr = System.err
 
-        System.out = new CpsPrintStream(testStdBuf)
-        System.err = new CpsPrintStream(testErrBuf)
+        final testStdBuf = captureOut()
+        final testErrBuf = captureErr()
 
         def catchResult
         
