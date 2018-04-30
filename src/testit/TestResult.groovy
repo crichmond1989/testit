@@ -2,7 +2,7 @@ package testit
 
 import testit.StepCategory
 
-class TestResult {
+class TestResult implements Serializable {
     String classname
     String name
     List<StepResult> steps = []

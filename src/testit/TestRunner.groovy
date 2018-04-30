@@ -41,17 +41,17 @@ class TestRunner implements Serializable {
         return testUtility(source, Before.class)
     }
 
+
+
     List<StepResult> testBody(Object source, String method) {
         final testStdBuf = new ByteArrayOutputStream()
-        final testOut = new PrintStream(testStdBuf)
         final originalOut = System.out
 
         final testErrBuf = new ByteArrayOutputStream()
-        final testErr = new PrintStream(testErrBuf)
         final originalErr = System.err
 
-        System.out = testOut
-        System.err = testErr
+        System.out = new PrintStream(testStdBuf)
+        System.err = new PrintStream(testErrBuf)
 
         def catchResult
         
@@ -68,15 +68,15 @@ class TestRunner implements Serializable {
 
         final results = []
 
-        final testOutString = testStdBuf.toString()
+        final testOut = testStdBuf.toString()
 
-        if (testOutString)
-            results += StepResult.Wrote(testOutString)
+        if (testOut)
+            results += StepResult.Wrote(testOut)
 
-        final testErrString = testErrBuf.toString()
+        final testErr = testErrBuf.toString()
 
-        if (testErrString)
-            results += StepResult.WroteError(testErrString)
+        if (testErr)
+            results += StepResult.WroteError(testErr)
 
         if (catchResult)
             results += catchResult
