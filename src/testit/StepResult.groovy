@@ -9,7 +9,17 @@ class StepResult implements Serializable {
     Throwable error
     String trace
 
-    static StepResult Failure(AssertionError error) {
+    static StepResult Errored(Throwable error) {
+        return new StepResult(
+            category: StepCategory.Error,
+            message: error.getMessage(),
+            type: error.class.getName(),
+            error: error,
+            trace: error.getStackTrace().join("\n")
+        )
+    }
+    
+    static StepResult Failed(AssertionError error) {
         return new StepResult(
             category: StepCategory.Failure,
             message: error.getMessage(),
@@ -18,13 +28,17 @@ class StepResult implements Serializable {
         )
     }
 
-    static StepResult Errored(Throwable error) {
+    static StepResult Wrote(String message) {
         return new StepResult(
-            category: StepCategory.Error,
-            message: error.getMessage(),
-            type: error.class.getName(),
-            error: error,
-            trace: error.getStackTrace().join("\n")
+            category: StepCategory.StandardOutput,
+            message: message
+        )
+    }
+
+    static StepResult WroteError(String message) {
+        return new StepResult(
+            category: StepCategory.StandardError,
+            message: message
         )
     }
 }

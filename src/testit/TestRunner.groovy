@@ -24,10 +24,10 @@ class TestRunner implements Serializable {
         if (result.getStatus() == "fail")
             return result
 
-        final bodyResult = testBody(source, method)
+        final bodyResults = testBody(source, method)
 
-        if (bodyResult)
-            result.steps += bodyResult
+        if (bodyResults)
+            result.steps += bodyResults
 
         final teardownResult = testTeardown(source)
 
@@ -41,14 +41,47 @@ class TestRunner implements Serializable {
         return testUtility(source, Before.class)
     }
 
-    StepResult testBody(Object source, String method) {
+    List<StepResult> testBody(Object source, String method) {
+        final testStdBuf = new ByteArrayOutputStream()
+        final testOut = new PrintStream(testStdBuf)
+        final originalOut = System.out
+
+        final testErrBuf = new ByteArrayOutputStream()
+        final testErr = new PrintStream(testErrBuf)
+        final originalErr = System.err
+
+        System.out = testOut
+        System.err = testErr
+
+        def catchResult
+        
         try {
             source."$method"()
         } catch (AssertionError error) {
-            return StepResult.Failure(error)
+            catchResult = StepResult.Failed(error)
         } catch (Throwable error) {
-            return StepResult.Errored(error)
+            catchResult = StepResult.Errored(error)
         }
+
+        System.out = originalOut
+        System.err = originalErr
+
+        final results = []
+
+        final testOutString = testStdBuf.toString()
+
+        if (testOutString)
+            results += StepResult.Wrote(testOutString)
+
+        final testErrString = testErrBuf.toString()
+
+        if (testErrString)
+            results += StepResult.WroteError(testErrString)
+
+        if (catchResult)
+            results += catchResult
+
+        return results
     }
 
     StepResult testTeardown(Object source) {
