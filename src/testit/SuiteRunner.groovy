@@ -46,7 +46,7 @@ class SuiteRunner implements Serializable {
     }
 
     TestResult invokeByAnnotation(Object source, Class<? extends Annotation> annotation) {
-        final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }
+        final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }?.getName()
 
         if (!method)
             return
@@ -57,11 +57,7 @@ class SuiteRunner implements Serializable {
         )
 
         try {
-            final methodName = method.getName() as String
-
-            result.steps += StepResult.wrote(methodName.dump())
-
-            source."$methodName"()
+            source."$method"()
         } catch(Throwable error) {
             result.steps += StepResult.errored(error)
         }

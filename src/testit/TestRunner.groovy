@@ -63,13 +63,13 @@ class TestRunner implements Serializable {
     }
 
     StepResult invokeByAnnotation(Object source, Class<? extends Annotation> annotation) {
-        final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }
+        final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }?.getName()
 
         if (!method)
             return
 
         try {
-            method.invoke(source)
+            source."$method"()
         } catch(Throwable error) {
             return StepResult.errored(error)
         }
