@@ -2,7 +2,10 @@ package testit
 
 import java.lang.annotation.Annotation
 
+import testit.StepResult
 import testit.SuiteResult
+import testit.SuiteSetup
+import testit.SuiteTeardown
 import testit.Test
 import testit.TestResult
 import testit.TestRunner
