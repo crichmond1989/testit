@@ -60,6 +60,7 @@ class SuiteRunner implements Serializable {
             final methodName = method.getName()
 
             result.steps += StepResult.wrote("method name: $methodName")
+            result.steps += StepResult.wrote(source.dump())
 
             source."$methodName"()
         } catch(Throwable error) {
