@@ -3,21 +3,22 @@ package testit
 import groovy.lang.Script
 
 import testit.ExampleService
-import testit.FunTest
 import testit.MockScript
-import testit.UnitTest
+import testit.Suite
+import testit.Test
 
+@Suite
 class ExampleServiceTests implements Serializable {
     Script script
 
-    @FunTest
+    @Test
     void smokeTest() {
         final service = new ExampleService(script)
 
         service.build()
     }
 
-    @FunTest
+    @Test
     void ensureIsReleaseWhenMaster() {
         final service = new ExampleService(script)
 
@@ -26,7 +27,7 @@ class ExampleServiceTests implements Serializable {
         assert script.env.isRelease == "true"
     }
 
-    @FunTest
+    @Test
     void ensureIsNotReleaseWhenNotMaster() {
         final service = new ExampleService(script)
 
@@ -35,7 +36,7 @@ class ExampleServiceTests implements Serializable {
         assert script.env.isRelease == "false"
     }
 
-    @UnitTest
+    @Test
     void mockEnsureIsReleaseWhenMaster() {
         final mock = new MockScript()
 
@@ -47,10 +48,10 @@ class ExampleServiceTests implements Serializable {
 
         service.build()
 
-        assert mock.env.isRelease == "atrue"
+        assert mock.env.isRelease == "true"
     }
 
-    @UnitTest
+    @Test
     void mockEnsureIsNotReleaseWhenNotMaster() {
         final mock = new MockScript()
 

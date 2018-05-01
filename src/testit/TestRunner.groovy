@@ -1,24 +1,20 @@
 package testit
 
-@Grab("com.cloudbees:groovy-cps:1.1")
-@Grab('junit:junit:4.12')
-
-import com.cloudbees.groovy.cps.NonCPS
 import java.lang.annotation.Annotation
-import org.junit.After
-import org.junit.Before
 
 import testit.StepResult
 import testit.TestResult
+import testit.TestSetup
+import testit.TestTeardown
 
 class TestRunner implements Serializable {
-    TestResult testRun(Object source, String method) {
+    TestResult run(Object source, String method) {
         final result = new TestResult(
             classname: source.class.getName(),
             name: method
         )
 
-        final setupResult = testSetup(source)
+        final setupResult = setup(source)
 
         if (setupResult)
             result.steps += setupResult
@@ -26,12 +22,12 @@ class TestRunner implements Serializable {
         if (result.getStatus() == "fail")
             return result
 
-        final bodyResults = testBody(source, method)
+        final bodyResults = invokeTestMethod(source, method)
 
         if (bodyResults)
             result.steps += bodyResults
 
-        final teardownResult = testTeardown(source)
+        final teardownResult = teardown(source)
 
         if (teardownResult)
             result.steps += teardownResult
@@ -39,19 +35,15 @@ class TestRunner implements Serializable {
         return result
     }
 
-    StepResult testSetup(Object source) {
-        return testUtility(source, Before.class)
-    }
-
-    List<StepResult> testBody(Object source, String method) {
+    List<StepResult> invokeTestMethod(Object source, String method) {
         def catchResult
         
         try {
             source."$method"()
         } catch (AssertionError error) {
-            catchResult = StepResult.Failed(error)
+            catchResult = StepResult.failed(error)
         } catch (Throwable error) {
-            catchResult = StepResult.Errored(error)
+            catchResult = StepResult.errored(error)
         }
 
         final results = []
@@ -62,11 +54,15 @@ class TestRunner implements Serializable {
         return results
     }
 
-    StepResult testTeardown(Object source) {
-        return testUtility(source, After.class)
+    StepResult setup(Object source) {
+        return invokeByAnnotation(source, TestSetup.class)
     }
 
-    StepResult testUtility(Object source, Class<? extends Annotation> annotation) {
+    StepResult teardown(Object source) {
+        return invokeByAnnotation(source, TestTeardown.class)
+    }
+
+    StepResult invokeByAnnotation(Object source, Class<? extends Annotation> annotation) {
         final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }
 
         if (!method)
@@ -75,7 +71,7 @@ class TestRunner implements Serializable {
         try {
             method.invoke(source)
         } catch(Throwable error) {
-            return StepResult.Errored(error)
+            return StepResult.errored(error)
         }
     }
 }

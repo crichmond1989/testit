@@ -7,8 +7,14 @@ import testit.StepResult
 import testit.TestResult
 
 class JUnitConverter implements Serializable {
-    Node ConvertSuiteResult(SuiteResult result) {
-        final tests = result.tests.collect { ConvertTestResult(it) }
+    Node convertTestRunResult(TestRunResult result) {
+        final suites = result.suites.collect { convertSuiteResult(it) }
+
+        return new Node(null, "testsuites", [name: result.name], suites)
+    }
+
+    Node convertSuiteResult(SuiteResult result) {
+        final tests = result.tests.collect { convertTestResult(it) }
 
         return new Node(null, "testsuite", [
             name: result.name,
@@ -16,8 +22,8 @@ class JUnitConverter implements Serializable {
         ], tests)
     }
 
-    Node ConvertTestResult(TestResult result) {
-        final steps = result.steps.collect { ConvertStepResult(it) }
+    Node convertTestResult(TestResult result) {
+        final steps = result.steps.collect { convertStepResult(it) }
 
         return new Node(null, "testcase", [
             name: result.name,
@@ -26,38 +32,38 @@ class JUnitConverter implements Serializable {
         ], steps)
     }
 
-    Node ConvertStepResult(StepResult result) {
+    Node convertStepResult(StepResult result) {
         switch(result.category) {
             case StepCategory.Error:
-                return ConvertError(result)
+                return convertError(result)
             case StepCategory.Failure:
-                return ConvertFailure(result)
+                return convertFailure(result)
             case StepCategory.StandardError:
-                return ConvertStandardError(result)
+                return convertStandardError(result)
             case StepCategory.StandardOutput:
-                return ConvertStandardOutput(result)
+                return convertStandardOutput(result)
         }
     }
 
-    Node ConvertError(StepResult result) {
+    Node convertError(StepResult result) {
         return new Node(null, "error", [
             message: result.message + "\n" + result.trace,
             type: result.type
         ])
     }
 
-    Node ConvertFailure(StepResult result) {
+    Node convertFailure(StepResult result) {
         return new Node(null, "failure", [
             message: result.message,
             type: result.type
         ])
     }
 
-    Node ConvertStandardError(StepResult result) {
+    Node convertStandardError(StepResult result) {
         return new Node(null, "system-err", null, result.message)
     }
 
-    Node ConvertStandardOutput(StepResult result) {
+    Node convertStandardOutput(StepResult result) {
         return new Node(null, "system-out", null, result.message)
     }
 }
