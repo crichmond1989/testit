@@ -57,7 +57,7 @@ class SuiteRunner implements Serializable {
         )
 
         try {
-            method.invoke(source)
+            source."${method.getName()}"()
         } catch(Throwable error) {
             result.steps += StepResult.errored(error)
         }
