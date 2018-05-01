@@ -5,11 +5,23 @@ import groovy.lang.Script
 import testit.ExampleService
 import testit.MockScript
 import testit.Suite
+import testit.SuiteSetup
 import testit.Test
+import testit.TestTeardown
 
 @Suite
 class ExampleServiceTests implements Serializable {
     Script script
+
+    @SuiteSetup
+    void suiteSetup() {
+        script.println("the suite is setup")
+    }
+
+    @TestTeardown
+    void testTeardown() {
+        script.println("test finished")
+    }
 
     @Test
     void smokeTest() {

@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation
 
 import testit.SuiteResult
 import testit.Test
+import testit.TestResult
 import testit.TestRunner
 
 class SuiteRunner implements Serializable {
@@ -14,9 +15,50 @@ class SuiteRunner implements Serializable {
     }
 
     SuiteResult run(Object source) {
-        final tests = source.class.getDeclaredMethods().findAll { it.isAnnotationPresent(Test.class) }.collect { it.getName() }
-        final results = tests.collect { testRunner.run(source, it) }
+        final tests = []
+
+        final setupResult = setup(source)
+
+        if (setupResult)
+            tests += setupResult
+
+        final testMethods = source.class.getDeclaredMethods().findAll { it.isAnnotationPresent(Test.class) }.collect { it.getName() }
         
-        return new SuiteResult(name: source.class.getName(), tests: results)
+        tests += testMethods.collect { testRunner.run(source, it) }
+
+        final teardownResult = teardown(source)
+
+        if (teardownResult)
+            tests += teardownResult
+        
+        return new SuiteResult(name: source.class.getName(), tests: tests)
+    }
+
+    TestResult setup(Object source) {
+        return invokeByAnnotation(source, SuiteSetup.class)
+    }
+
+    TestResult teardown(Object source) {
+        return invokeByAnnotation(source, SuiteTeardown.class)
+    }
+
+    TestResult invokeByAnnotation(Object source, Class<? extends Annotation> annotation) {
+        final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }
+
+        if (!method)
+            return
+
+        final result = new TestResult(
+            classname: source.class.getName(),
+            name: annotation.getSimpleName()
+        )
+
+        try {
+            method.invoke(source)
+        } catch(Throwable error) {
+            result.steps += StepResult.errored(error)
+        }
+
+        return result
     }
 }
