@@ -1,6 +1,7 @@
 package testit
 
 import java.lang.annotation.Annotation
+import java.util.Date
 
 import testit.StepResult
 import testit.TestResult
@@ -14,13 +15,17 @@ class TestRunner implements Serializable {
             name: method
         )
 
+        result.recordStart()
+
         final setupResult = setup(source)
 
         if (setupResult)
             result.steps += setupResult
 
-        if (result.getStatus() == "fail")
+        if (result.getStatus() == "fail") {
+            result.recordEnd()
             return result
+        }
 
         final bodyResults = invokeTestMethod(source, method)
 
@@ -32,6 +37,7 @@ class TestRunner implements Serializable {
         if (teardownResult)
             result.steps += teardownResult
 
+        result.recordEnd()
         return result
     }
 

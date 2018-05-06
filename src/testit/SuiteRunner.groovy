@@ -56,12 +56,15 @@ class SuiteRunner implements Serializable {
             name: annotation.getSimpleName()
         )
 
+        result.recordStart()
+
         try {
             source."$method"()
         } catch(Throwable error) {
             result.steps += StepResult.errored(error)
         }
 
+        result.recordEnd()
         return result
     }
 }

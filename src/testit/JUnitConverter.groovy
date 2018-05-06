@@ -28,7 +28,8 @@ class JUnitConverter implements Serializable {
         return new Node(null, "testcase", [
             name: result.name,
             classname: result.classname,
-            status: result.getStatus()
+            status: result.getStatus(),
+            time: result.getDurationInSeconds()
         ], steps)
     }
 
