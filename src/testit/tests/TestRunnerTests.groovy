@@ -5,7 +5,7 @@ import testit.Test
 import testit.TestRunner
 import testit.TestSetup
 
-class TestRunnerTests {
+class TestRunnerTests implements Serializable {
     class SuccessfulAnnotation {
         @TestSetup
         void run() {}
