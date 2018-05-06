@@ -47,16 +47,16 @@ class JUnitConverter implements Serializable {
 
     Node convertError(StepResult result) {
         return new Node(null, "error", [
-            message: result.message + "\n" + result.trace,
+            message: result.message,
             type: result.type
-        ])
+        ], result.trace)
     }
 
     Node convertFailure(StepResult result) {
         return new Node(null, "failure", [
             message: result.message,
             type: result.type
-        ])
+        ], result.trace)
     }
 
     Node convertStandardError(StepResult result) {
