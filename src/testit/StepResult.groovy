@@ -24,7 +24,8 @@ class StepResult implements Serializable {
             category: StepCategory.Failure,
             message: error.getMessage(),
             type: error.class.getName(),
-            error: error
+            error: error,
+            trace: error.getStackTrace().join("\n")
         )
     }
 
