@@ -5,7 +5,7 @@ import testit.tests.SuiteRunnerTests
 import testit.tests.TestRunnerTests
 
 class AllTests implements Serializable {
-    Object[] getSources() {
+    List getSources() {
         return [
             new JUnitConverterTests(),
             new SuiteRunnerTests(),
