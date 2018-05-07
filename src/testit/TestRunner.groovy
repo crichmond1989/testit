@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation
 import java.util.Date
 
 import testit.StepResult
+import testit.SuiteClassname
 import testit.TestResult
 import testit.TestSetup
 import testit.TestTeardown
@@ -11,7 +12,7 @@ import testit.TestTeardown
 class TestRunner implements Serializable {
     TestResult run(Object source, String method) {
         final result = new TestResult(
-            classname: source.class.getName(),
+            classname: getClassname(source),
             name: method
         )
 
@@ -39,6 +40,20 @@ class TestRunner implements Serializable {
 
         result.recordEnd()
         return result
+    }
+
+    String getClassname(Object source) {
+        final suite = source.class.getAnnotation(Suite.class)
+
+        if (suite?.classname())
+            return suite.classname()
+
+        final suiteClassname = source.class.getDeclaredMethods().find { it.isAnnotationPresent(SuiteClassname.class) }?.getName()
+
+        if (suiteClassname)
+            return source."$suiteClassname"()
+
+        return source.class.getName()
     }
 
     StepResult invokeTestMethod(Object source, String method) {

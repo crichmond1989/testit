@@ -1,6 +1,8 @@
 package testit.tests
 
 import testit.StepCategory
+import testit.Suite
+import testit.SuiteClassname
 import testit.Test
 import testit.TestRunner
 import testit.TestSetup
@@ -83,6 +85,16 @@ class TestRunnerTests implements Serializable {
     }
 
     class NoAnnotations {}
+
+    @Suite(classname = "custom.from.annotation")
+    class SuiteClassnameFromAnnotation {}
+
+    class SuiteClassnameFromMethod {
+        @SuiteClassname
+        String getClassname() {
+            return "custom.classname"
+        }
+    }
 
     final runner = new TestRunner()
 
@@ -169,6 +181,30 @@ class TestRunnerTests implements Serializable {
         runner.run(source, "run")
 
         assert !source.invokedTeardown
+    }
+
+    @Test
+    void getClassname_default() {
+        final source = new NoAnnotations()
+        final name = runner.getClassname(source)
+
+        assert name == NoAnnotations.class.getName()
+    }
+
+    @Test
+    void getClassname_fromAnnotation() {
+        final source = new SuiteClassnameFromAnnotation()
+        final name = runner.getClassname(source)
+
+        assert name == "custom.from.annotation"
+    }
+
+    @Test
+    void getClassname_fromMethod() {
+        final source = new SuiteClassnameFromMethod()
+        final name = runner.getClassname(source)
+
+        assert name == source.getClassname()
     }
 
     @Test

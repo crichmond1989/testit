@@ -67,7 +67,7 @@ class SuiteRunner implements Serializable {
             return
 
         final result = new TestResult(
-            classname: source.class.getName(),
+            classname: testRunner.getClassname(source),
             name: annotation.getSimpleName()
         )
 
