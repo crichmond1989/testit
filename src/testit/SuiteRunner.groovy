@@ -3,6 +3,7 @@ package testit
 import java.lang.annotation.Annotation
 
 import testit.StepResult
+import testit.Suite
 import testit.SuiteResult
 import testit.SuiteSetup
 import testit.SuiteTeardown
@@ -34,7 +35,13 @@ class SuiteRunner implements Serializable {
         if (teardownResult)
             tests += teardownResult
         
-        return new SuiteResult(name: source.class.getName(), tests: tests)
+        return new SuiteResult(name: getSuiteName(source), tests: tests)
+    }
+
+    String getSuiteName(Object source) {
+        final suite = source.class.getAnnotation(Suite.class)
+
+        return suite?.name() ?: source.class.getName()
     }
 
     TestResult setup(Object source) {
