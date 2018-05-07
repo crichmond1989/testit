@@ -10,7 +10,7 @@ class TestRunRunner implements Serializable {
         this.suiteRunner = suiteRunner ?: new SuiteRunner()
     }
 
-    TestRunResult run(Object... source) {
+    TestRunResult run(Object[] source) {
         final results = source.collect { suiteRunner.run(it) }
         
         return new TestRunResult(name: "", suites: results)
