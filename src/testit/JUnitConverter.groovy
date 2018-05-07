@@ -1,12 +1,17 @@
 package testit
 
 import groovy.util.Node
+import java.text.DecimalFormat
 
 import testit.StepCategory
 import testit.StepResult
 import testit.TestResult
 
+// JUnit 4 spec: http://llg.cubic.org/docs/junit/
+
 class JUnitConverter implements Serializable {
+    final timeFormatter = new DecimalFormat("#.###")
+
     Node convertTestRunResult(TestRunResult result) {
         final suites = result.suites.collect { convertSuiteResult(it) }
 
@@ -24,17 +29,19 @@ class JUnitConverter implements Serializable {
 
     Node convertTestResult(TestResult result) {
         final steps = result.steps.collect { convertStepResult(it) }
+        final time = result.getDurationInSeconds()
+        final formattedTime = timeFormatter.format(time)
 
         return new Node(null, "testcase", [
             name: result.name,
             classname: result.classname,
             status: result.getStatus(),
-            time: result.getDurationInSeconds()
+            time: formattedTime
         ], steps)
     }
 
     Node convertStepResult(StepResult result) {
-        switch(result.category) {
+        switch (result.category) {
             case StepCategory.Error:
                 return convertError(result)
             case StepCategory.Failure:

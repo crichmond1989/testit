@@ -1,11 +1,17 @@
 package testit.tests
 
+import java.text.DecimalFormat
+import java.util.Date
+
 import testit.JUnitConverter
 import testit.StepCategory
 import testit.StepResult
 import testit.Test
+import testit.TestResult
 import testit.TestRunner
 import testit.TestSetup
+
+// JUnit 4 spec: http://llg.cubic.org/docs/junit/
 
 class JUnitConverterTests implements Serializable {
     final converter = new JUnitConverter()
@@ -24,6 +30,14 @@ class JUnitConverterTests implements Serializable {
         trace: "It errored at some line"
     )
 
+    final failureTestResult = new TestResult(
+        classname: "testit.something",
+        name: "something",
+        start: new Date(),
+        end: new Date().plus(1),
+        steps: [failureResult]
+    )
+
     final standardErrorResult = new StepResult(
         category: StepCategory.StandardError,
         message: "test message"
@@ -33,6 +47,36 @@ class JUnitConverterTests implements Serializable {
         category: StepCategory.StandardOutput,
         message: "test message"
     )
+
+    @Test
+    void convertTestResult_correctTag() {
+        final result = converter.convertTestResult(failureTestResult)
+
+        assert result.name() == "testcase"
+    }
+
+    @Test
+    void convertTestResult_correctInnerNode() {
+        final result = converter.convertTestResult(failureTestResult)
+
+        assert result.children()[0].name() == "failure"
+    }
+
+    @Test
+    void convertTestResult_correctStatus() {
+        final result = converter.convertTestResult(failureTestResult)
+
+        assert result.attribute("status") == "fail"
+    }
+
+    @Test
+    void convertTestResult_correctTime() {
+        final result = converter.convertTestResult(failureTestResult)
+        final expectedTime = (failureTestResult.end.getTime() - failureTestResult.start.getTime()) / 1000
+        final expectedFormattedTime = converter.timeFormatter.format(expectedTime)
+
+        assert result.attribute("time") == expectedFormattedTime
+    }
     
     @Test
     void convertFailure_correctTag() {
