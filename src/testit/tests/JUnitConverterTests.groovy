@@ -6,9 +6,11 @@ import java.util.Date
 import testit.JUnitConverter
 import testit.StepCategory
 import testit.StepResult
+import testit.SuiteResult
 import testit.Test
 import testit.TestResult
 import testit.TestRunner
+import testit.TestRunResult
 import testit.TestSetup
 
 // JUnit 4 spec: http://llg.cubic.org/docs/junit/
@@ -18,21 +20,21 @@ class JUnitConverterTests implements Serializable {
 
     final errorResult = new StepResult(
         category: StepCategory.Error,
-        message: "test message",
+        message: "error message",
         type: "java.lang.AssertionError",
         trace: "It failed at some line"
     )
     
     final failureResult = new StepResult(
         category: StepCategory.Failure,
-        message: "test message",
+        message: "failure message",
         type: "java.lang.Exception",
         trace: "It errored at some line"
     )
 
     final failureTestResult = new TestResult(
         classname: "testit.something",
-        name: "something",
+        name: "test",
         start: new Date(),
         end: new Date().plus(1),
         steps: [failureResult]
@@ -40,13 +42,72 @@ class JUnitConverterTests implements Serializable {
 
     final standardErrorResult = new StepResult(
         category: StepCategory.StandardError,
-        message: "test message"
+        message: "standard error"
     )
 
     final standardOutputResult = new StepResult(
         category: StepCategory.StandardOutput,
-        message: "test message"
+        message: "standard output"
     )
+
+    final suiteResult = new SuiteResult(
+        name: "suite",
+        tests: [failureTestResult]
+    )
+
+    final testRunResult = new TestRunResult(
+        name: "test run",
+        suites: [suiteResult]
+    )
+
+    @Test
+    void convertTestRunResult_correctTag() {
+        final result = converter.convertTestRunResult(testRunResult)
+
+        assert result.name() == "testsuites"
+    }
+
+    @Test
+    void convertTestRunResult_correctInnerNode() {
+        final result = converter.convertTestRunResult(testRunResult)
+
+        assert result.children()[0].name() == "testsuite"
+    }
+
+    @Test
+    void convertTestRunResult_correctName() {
+        final result = converter.convertTestRunResult(testRunResult)
+
+        assert result.attribute("name") == testRunResult.name
+    }
+
+    @Test
+    void convertSuiteResult_correctTag() {
+        final result = converter.convertSuiteResult(suiteResult)
+
+        assert result.name() == "testsuite"
+    }
+
+    @Test
+    void convertSuiteResult_correctInnerNode() {
+        final result = converter.convertSuiteResult(suiteResult)
+
+        assert result.children()[0].name() == "testcase"
+    }
+
+    @Test
+    void convertSuiteResult_correctName() {
+        final result = converter.convertSuiteResult(suiteResult)
+
+        assert result.attribute("name") == suiteResult.name
+    }
+
+    @Test
+    void convertSuiteResult_correctTestCount() {
+        final result = converter.convertSuiteResult(suiteResult)
+
+        assert result.attribute("tests") == suiteResult.tests.size()
+    }
 
     @Test
     void convertTestResult_correctTag() {
@@ -60,6 +121,20 @@ class JUnitConverterTests implements Serializable {
         final result = converter.convertTestResult(failureTestResult)
 
         assert result.children()[0].name() == "failure"
+    }
+
+    @Test
+    void convertTestResult_correctClassname() {
+        final result = converter.convertTestResult(failureTestResult)
+
+        assert result.attribute("classname") == failureTestResult.classname
+    }
+
+    @Test
+    void convertTestResult_correctName() {
+        final result = converter.convertTestResult(failureTestResult)
+
+        assert result.attribute("name") == failureTestResult.name
     }
 
     @Test
