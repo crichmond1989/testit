@@ -41,23 +41,16 @@ class TestRunner implements Serializable {
         return result
     }
 
-    List<StepResult> invokeTestMethod(Object source, String method) {
+    StepResult invokeTestMethod(Object source, String method) {
         def catchResult
         
         try {
             source."$method"()
         } catch (AssertionError error) {
-            catchResult = StepResult.failed(error)
+            return StepResult.failed(error)
         } catch (Throwable error) {
-            catchResult = StepResult.errored(error)
+            return StepResult.errored(error)
         }
-
-        final results = []
-
-        if (catchResult)
-            results += catchResult
-
-        return results
     }
 
     StepResult setup(Object source) {
@@ -76,7 +69,7 @@ class TestRunner implements Serializable {
 
         try {
             source."$method"()
-        } catch(Throwable error) {
+        } catch (Throwable error) {
             return StepResult.errored(error)
         }
     }
