@@ -1,6 +1,7 @@
 package testit.tests
 
 import testit.Suite
+import testit.SuiteName
 import testit.SuiteRunner
 import testit.Test
 
@@ -15,11 +16,18 @@ class SuiteRunnerTests implements Serializable {
         @Test
         void run() {}
     }
-    
+
     @Suite
     class NoNameSuite {
         @Test
         void run() {}
+    }
+
+    class SuiteNameFromMethod {
+        @SuiteName
+        String getSuiteName() {
+            return "custom name from field"
+        }
     }
 
     final runner = new SuiteRunner()
@@ -46,5 +54,13 @@ class SuiteRunnerTests implements Serializable {
         final name = runner.getSuiteName(source)
 
         assert name == NoNameSuite.class.getName()
+    }
+
+    @Test
+    void getSuiteName_suiteNameFromMethod() {
+        final source = new SuiteNameFromMethod()
+        final name = runner.getSuiteName(source)
+
+        assert name == source.getSuiteName()
     }
 }

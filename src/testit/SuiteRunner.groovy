@@ -41,7 +41,15 @@ class SuiteRunner implements Serializable {
     String getSuiteName(Object source) {
         final suite = source.class.getAnnotation(Suite.class)
 
-        return suite?.name() ?: source.class.getName()
+        if (suite?.name())
+            return suite.name()
+
+        final suiteName = source.class.getDeclaredMethods().find { it.isAnnotationPresent(SuiteName.class) }?.getName()
+
+        if (suiteName)
+            return source."$suiteName"()
+
+        return source.class.getName()
     }
 
     TestResult setup(Object source) {
