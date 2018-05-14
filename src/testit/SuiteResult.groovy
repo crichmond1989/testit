@@ -1,8 +1,11 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import testit.ResultStatus
 import testit.TestResult
 
+@CompileStatic
 class SuiteResult implements Serializable {
     String name
     List<TestResult> tests

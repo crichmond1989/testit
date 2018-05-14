@@ -1,7 +1,10 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import testit.StepCategory
 
+@CompileStatic
 class StepResult implements Serializable {
     StepCategory category
     String message

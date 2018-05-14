@@ -1,8 +1,11 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import java.lang.annotation.Annotation
 import java.util.Date
 
+import testit.ReflectionUtils
 import testit.ResultStatus
 import testit.StepResult
 import testit.SuiteClassname
@@ -10,6 +13,7 @@ import testit.TestResult
 import testit.TestSetup
 import testit.TestTeardown
 
+@CompileStatic
 class TestRunner implements Serializable {
     TestResult run(Object source, String method) {
         final result = new TestResult(
@@ -52,7 +56,7 @@ class TestRunner implements Serializable {
         final suiteClassname = source.class.getDeclaredMethods().find { it.isAnnotationPresent(SuiteClassname.class) }?.getName()
 
         if (suiteClassname)
-            return source."$suiteClassname"()
+            return ReflectionUtils.invokeStringMethod(source, suiteClassname)
 
         return source.class.getName()
     }
@@ -61,7 +65,7 @@ class TestRunner implements Serializable {
         def catchResult
         
         try {
-            source."$method"()
+            ReflectionUtils.invokeMethod(source, method)
         } catch (AssertionError error) {
             return StepResult.failed(error)
         } catch (Throwable error) {
@@ -84,7 +88,7 @@ class TestRunner implements Serializable {
             return
 
         try {
-            source."$method"()
+            ReflectionUtils.invokeMethod(source, method)
         } catch (Throwable error) {
             return StepResult.errored(error)
         }

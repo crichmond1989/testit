@@ -1,10 +1,13 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import java.util.Date
 
 import testit.ResultStatus
 import testit.StepCategory
 
+@CompileStatic
 class TestResult implements Serializable {
     String classname
     String name
@@ -14,7 +17,7 @@ class TestResult implements Serializable {
 
     Double getDurationInSeconds() {
         if (start && end)
-            return (end.getTime() - start.getTime()) / 1000
+            return (end.getTime() - start.getTime()) / 1000d
     }
 
     ResultStatus getStatus() {
