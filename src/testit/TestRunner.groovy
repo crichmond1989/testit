@@ -3,6 +3,7 @@ package testit
 import java.lang.annotation.Annotation
 import java.util.Date
 
+import testit.ResultStatus
 import testit.StepResult
 import testit.SuiteClassname
 import testit.TestResult
@@ -23,7 +24,7 @@ class TestRunner implements Serializable {
         if (setupResult)
             result.steps += setupResult
 
-        if (result.getStatus() == "fail") {
+        if (result.getStatus() != ResultStatus.Success) {
             result.recordEnd()
             return result
         }

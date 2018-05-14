@@ -3,6 +3,7 @@ package testit
 import groovy.util.Node
 import java.text.DecimalFormat
 
+import testit.ResultStatus
 import testit.StepCategory
 import testit.StepResult
 import testit.TestResult
@@ -15,7 +16,12 @@ class JUnitConverter implements Serializable {
     Node convertTestRunResult(TestRunResult result) {
         final suites = result.suites.collect { convertSuiteResult(it) }
 
-        return new Node(null, "testsuites", [name: result.name], suites)
+        return new Node(null, "testsuites", [
+            name: result.name,
+            tests: result.getSuccessCount(),
+            errors: result.getErrorCount(),
+            failures: result.getFailureCount()
+        ], suites)
     }
 
     Node convertSuiteResult(SuiteResult result) {
@@ -23,19 +29,22 @@ class JUnitConverter implements Serializable {
 
         return new Node(null, "testsuite", [
             name: result.name,
-            tests: tests.size()
+            tests: tests.size(),
+            errors: result.getErrorCount(),
+            failures: result.getFailureCount()
         ], tests)
     }
 
     Node convertTestResult(TestResult result) {
         final steps = result.steps.collect { convertStepResult(it) }
+        final status = result.getStatus() == ResultStatus.Success ? "pass" : "fail"
         final time = result.getDurationInSeconds()
         final formattedTime = timeFormatter.format(time)
 
         return new Node(null, "testcase", [
             name: result.name,
             classname: result.classname,
-            status: result.getStatus(),
+            status: status,
             time: formattedTime
         ], steps)
     }

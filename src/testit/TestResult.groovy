@@ -2,6 +2,7 @@ package testit
 
 import java.util.Date
 
+import testit.ResultStatus
 import testit.StepCategory
 
 class TestResult implements Serializable {
@@ -16,13 +17,17 @@ class TestResult implements Serializable {
             return (end.getTime() - start.getTime()) / 1000
     }
 
-    String getStatus() {
+    ResultStatus getStatus() {
         if (!steps)
-            return "pass"
+            return ResultStatus.Success
 
-        final hasErrorOrFailure = steps.any { it.category == StepCategory.Error || it.category == StepCategory.Failure }
+        if (steps.any { it.category == StepCategory.Error })
+            return ResultStatus.Error
 
-        return hasErrorOrFailure ? "fail" : "pass"
+        if (steps.any { it.category == StepCategory.Failure })
+            return ResultStatus.Failure
+
+        return ResultStatus.Success
     }
 
     void recordStart() {

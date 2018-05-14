@@ -1,5 +1,6 @@
 package testit.tests
 
+import testit.ResultStatus
 import testit.StepCategory
 import testit.Suite
 import testit.SuiteClassname
@@ -119,7 +120,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.getStatus() == "pass"
+        assert result.getStatus() == ResultStatus.Success
     }
 
     @Test
@@ -127,7 +128,7 @@ class TestRunnerTests implements Serializable {
         final source = new ErroredTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.getStatus() == "fail"
+        assert result.getStatus() == ResultStatus.Error
     }
 
     @Test
@@ -135,7 +136,7 @@ class TestRunnerTests implements Serializable {
         final source = new FailedTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.getStatus() == "fail"
+        assert result.getStatus() == ResultStatus.Failure
     }
 
     @Test
