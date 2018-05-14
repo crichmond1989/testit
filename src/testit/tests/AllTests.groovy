@@ -14,9 +14,9 @@ class AllTests implements Serializable {
     @NonCPS
     List<Object> getSources() {
         return [
-            new JUnitConverterTests(),
-            new SuiteRunnerTests(),
-            new TestRunnerTests()
+            (Object) new JUnitConverterTests(),
+            (Object) new SuiteRunnerTests(),
+            (Object) new TestRunnerTests()
         ]
     }
 }
