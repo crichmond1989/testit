@@ -8,7 +8,7 @@ import testit.tests.TestRunnerTests
 
 @CompileStatic
 class AllTests implements Serializable {
-    List getSources() {
+    List<Object> getSources() {
         return [
             new JUnitConverterTests(),
             new SuiteRunnerTests(),
