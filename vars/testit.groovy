@@ -1,9 +1,10 @@
 import groovy.xml.XmlUtil
 
 import testit.JUnitConverter
+import testit.TestRunResult
 import testit.TestRunRunner
 
-void call(Map args) {
+TestRunResult call(Map args) {
     args = args ?: [:]
 
     final source = args.source
@@ -22,6 +23,8 @@ void call(Map args) {
 
     if (publish)
         junit(testResults: destination)
+
+    return results
 }
 
 return this
