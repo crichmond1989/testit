@@ -1,3 +1,4 @@
+import groovy.util.Node
 import groovy.xml.XmlUtil
 
 import testit.JUnitConverter
@@ -16,7 +17,7 @@ TestRunResult call(Map args) {
     final runner = new TestRunRunner()
 
     final results = runner.run(source)
-    final xml = converter.convertTestRunResult(results)
+    Node xml = converter.convertTestRunResult(results)
     final data = XmlUtil.serialize(xml)
 
     writeFile(file: destination, text: data)
