@@ -1,7 +1,5 @@
 package testit.tests
 
-import groovy.transform.CompileStatic
-
 import java.text.DecimalFormat
 import java.util.Date
 
@@ -19,7 +17,6 @@ import org.junit.Assert
 
 // JUnit 4 spec: http://llg.cubic.org/docs/junit/
 
-@CompileStatic
 class JUnitConverterTests implements Serializable {
     JUnitConverter converter = new JUnitConverter()
 
