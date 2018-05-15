@@ -10,16 +10,12 @@ import testit.StepCategory
 import testit.StepResult
 import testit.TestResult
 
-@Grab("com.cloudbees:groovy-cps:1.1")
-import com.cloudbees.groovy.cps.NonCPS
-
 // JUnit 4 spec: http://llg.cubic.org/docs/junit/
 
 @CompileStatic
 class JUnitConverter implements Serializable {
     DecimalFormat timeFormatter = new DecimalFormat("#.###")
 
-    @NonCPS
     Node convertTestRunResult(TestRunResult result) {
         final suites = result.suites.collect { convertSuiteResult(it) }
 
@@ -31,7 +27,6 @@ class JUnitConverter implements Serializable {
         ], suites)
     }
 
-    @NonCPS
     Node convertSuiteResult(SuiteResult result) {
         final tests = result.tests.collect { convertTestResult(it) }
 
@@ -43,7 +38,6 @@ class JUnitConverter implements Serializable {
         ], tests)
     }
 
-    @NonCPS
     Node convertTestResult(TestResult result) {
         final steps = result.steps.collect { convertStepResult(it) }
         final status = result.getStatus() == ResultStatus.Success ? "pass" : "fail"
@@ -58,7 +52,6 @@ class JUnitConverter implements Serializable {
         ], steps)
     }
 
-    @NonCPS
     Node convertStepResult(StepResult result) {
         switch (result.category) {
             case StepCategory.Error:
@@ -72,7 +65,6 @@ class JUnitConverter implements Serializable {
         }
     }
 
-    @NonCPS
     Node convertError(StepResult result) {
         return new Node(null, "error", [
             message: result.message,
@@ -80,7 +72,6 @@ class JUnitConverter implements Serializable {
         ], result.trace)
     }
 
-    @NonCPS
     Node convertFailure(StepResult result) {
         return new Node(null, "failure", [
             message: result.message,
@@ -88,12 +79,10 @@ class JUnitConverter implements Serializable {
         ], result.trace)
     }
 
-    @NonCPS
     Node convertStandardError(StepResult result) {
         return new Node(null, "system-err", null, result.message)
     }
 
-    @NonCPS
     Node convertStandardOutput(StepResult result) {
         return new Node(null, "system-out", null, result.message)
     }
