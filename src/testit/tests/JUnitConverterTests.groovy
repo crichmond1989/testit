@@ -1,5 +1,7 @@
 package testit.tests
 
+import groovy.util.Node
+
 import java.text.DecimalFormat
 import java.util.Date
 
