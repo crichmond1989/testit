@@ -1,7 +1,5 @@
 package testit
 
-import groovy.transform.CompileStatic
-
 import java.lang.annotation.Annotation
 import java.util.Date
 
@@ -13,7 +11,6 @@ import testit.TestResult
 import testit.TestSetup
 import testit.TestTeardown
 
-@CompileStatic
 class TestRunner implements Serializable {
     TestResult run(Object source, String method) {
         final result = new TestResult(

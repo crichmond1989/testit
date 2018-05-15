@@ -1,7 +1,5 @@
 package testit
 
-import groovy.transform.CompileStatic
-
 import java.lang.annotation.Annotation
 
 import testit.ReflectionUtils
@@ -14,7 +12,6 @@ import testit.Test
 import testit.TestResult
 import testit.TestRunner
 
-@CompileStatic
 class SuiteRunner implements Serializable {
     TestRunner testRunner
 

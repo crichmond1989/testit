@@ -1,13 +1,10 @@
 package testit
 
-import groovy.transform.CompileStatic
-
 import java.util.Date
 
 import testit.ResultStatus
 import testit.StepCategory
 
-@CompileStatic
 class TestResult implements Serializable {
     String classname
     String name

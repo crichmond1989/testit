@@ -1,7 +1,5 @@
 package testit.tests
 
-import groovy.transform.CompileStatic
-
 import testit.Suite
 import testit.SuiteName
 import testit.SuiteRunner
@@ -9,7 +7,6 @@ import testit.Test
 
 import org.junit.Assert
 
-@CompileStatic
 class SuiteRunnerTests implements Serializable {    
     @Suite(name = "custom suite")
     class CustomNameSuite {

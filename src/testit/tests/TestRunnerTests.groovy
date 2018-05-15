@@ -1,7 +1,5 @@
 package testit.tests
 
-import groovy.transform.CompileStatic
-
 import testit.ResultStatus
 import testit.StepCategory
 import testit.Suite
@@ -13,7 +11,6 @@ import testit.TestTeardown
 
 import org.junit.Assert
 
-@CompileStatic
 class TestRunnerTests implements Serializable {
     class SuccessfulTestMethod {
         @Test
