@@ -5,6 +5,9 @@ import java.util.Date
 import testit.ResultStatus
 import testit.StepCategory
 
+@Grab("com.cloudbees:groovy-cps:1.1")
+import com.cloudbees.groovy.cps.NonCPS
+
 class TestResult implements Serializable {
     String classname
     String name
@@ -12,11 +15,13 @@ class TestResult implements Serializable {
     Date end
     List<StepResult> steps = []
 
+    @NonCPS
     Double getDurationInSeconds() {
         if (start && end)
             return (end.getTime() - start.getTime()) / 1000d
     }
 
+    @NonCPS
     ResultStatus getStatus() {
         if (!steps)
             return ResultStatus.Success
@@ -30,10 +35,12 @@ class TestResult implements Serializable {
         return ResultStatus.Success
     }
 
+    @NonCPS
     void recordStart() {
         start = new Date()
     }
 
+    @NonCPS
     void recordEnd() {
         end = new Date()
     }
