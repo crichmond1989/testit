@@ -17,9 +17,6 @@ TestRunResult call(Map args) {
 
     final results = runner.run(source)
     final xml = converter.convertTestRunResult(results)
-    
-    println(xml.dump())
-    
     final data = XmlUtil.serialize(xml)
 
     writeFile(file: destination, text: data)
