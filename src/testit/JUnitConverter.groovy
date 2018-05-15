@@ -1,6 +1,5 @@
 package testit
 
-import groovy.transform.CompileStatic
 import groovy.util.Node
 
 import java.text.DecimalFormat
@@ -12,7 +11,6 @@ import testit.TestResult
 
 // JUnit 4 spec: http://llg.cubic.org/docs/junit/
 
-@CompileStatic
 class JUnitConverter implements Serializable {
     DecimalFormat timeFormatter = new DecimalFormat("#.###")
 
