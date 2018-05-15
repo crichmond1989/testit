@@ -1,6 +1,5 @@
 package testit.tests
 
-import groovy.transform.CompileStatic
 import groovy.util.Node
 
 import java.text.DecimalFormat
@@ -20,7 +19,6 @@ import org.junit.Assert
 
 // JUnit 4 spec: http://llg.cubic.org/docs/junit/
 
-@CompileStatic
 class JUnitConverterTests {
     JUnitConverter converter = new JUnitConverter()
 
