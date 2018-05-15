@@ -21,7 +21,7 @@ import org.junit.Assert
 // JUnit 4 spec: http://llg.cubic.org/docs/junit/
 
 @CompileStatic
-class JUnitConverterTests implements Serializable {
+class JUnitConverterTests {
     JUnitConverter converter = new JUnitConverter()
 
     StepResult errorResult = new StepResult(
