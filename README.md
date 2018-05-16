@@ -19,6 +19,36 @@ testit(source: someTestObjects, destination: "TestResults.xml", publish: true)
 ### Dependencies
 [JUnit Plugin](https://plugins.jenkins.io/junit)
 
+### Advanced Uses
+
+```groovy
+stage("Unit Tests") {
+  final unitTests = [ new UnitA(), new UnitB() ]
+  final unitResult = testit(source: unitTests, destination: "UnitTestResults.xml")
+  
+  if (unitResult.getFailureCount() || unitResult.getErrorCount()) {
+    throw new Exception("Unit Test Failure")
+  }
+}
+
+stage("System Tests") {
+  final systemTests = [ new TestNodeTests(), new TestDatabaseTests() ]
+  final systemResult = testit(source: unitTests, destination: "SystemTestResults.xml")
+  
+  if (systemResult.getFailureCount() || systemResult.getErrorCount()) {
+    throw new Exception("System Test Failure")
+  }
+}
+
+stage("Functional Tests") {
+  final functionalTests = [ new FunctionalTestA(), new FunctionalTestB() ]
+  
+  testit(source: unitTests, destination: "FunctionalTestResults.xml")
+}
+```
+
+I use this approach with personal and work projects. Some of the work functional tests can take a long time, so it's nice to short-circuit early.
+
 ## Examples
 
 ### Test Suite Class
