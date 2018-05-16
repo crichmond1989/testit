@@ -13,11 +13,7 @@ import testit.TestResult
 import testit.TestRunner
 
 class SuiteRunner implements Serializable {
-    TestRunner testRunner
-
-    SuiteRunner(TestRunner testRunner = null) {
-        this.testRunner = testRunner ?: new TestRunner()
-    }
+    TestRunner testRunner = new TestRunner()
 
     SuiteResult run(Object source) {
         List<TestResult> tests = []
