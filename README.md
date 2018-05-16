@@ -21,6 +21,8 @@ testit(source: someTestObjects, destination: "TestResults.xml", publish: true)
 
 ### Advanced Uses
 
+I use the following approach with personal and work projects. Some of the functional tests can take a long time, so it's nice to short-circuit early. If you want to test full workflows, I would recommend putting those suites in a separate stage or job.
+
 ```groovy
 stage("Unit Tests") {
   final unitTests = [ new UnitA(), new UnitB() ]
@@ -46,8 +48,6 @@ stage("Functional Tests") {
   testit(source: unitTests, destination: "FunctionalTestResults.xml")
 }
 ```
-
-I use this approach with personal and work projects. Some of the functional tests can take a long time, so it's nice to short-circuit early. If you want to test full workflows, I would recommend putting those suites in a separate stage or job.
 
 ## Examples
 
