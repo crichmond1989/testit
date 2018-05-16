@@ -1,5 +1,5 @@
 # TestIt
-A test framework that works with Jenkins/CPS
+A test framework, implemented as a Shared Library, that works with Jenkins/CPS
 
 ## Pipeline Syntax
 
