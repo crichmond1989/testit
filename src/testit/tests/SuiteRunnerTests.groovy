@@ -5,6 +5,8 @@ import testit.SuiteName
 import testit.SuiteRunner
 import testit.Test
 
+import org.junit.Assert
+
 class SuiteRunnerTests implements Serializable {    
     @Suite(name = "custom suite")
     class CustomNameSuite {
@@ -30,14 +32,14 @@ class SuiteRunnerTests implements Serializable {
         }
     }
 
-    final runner = new SuiteRunner()
+    SuiteRunner runner = new SuiteRunner()
 
     @Test
     void getSuiteName_customNameSuite() {
         final source = new CustomNameSuite()
         final name = runner.getSuiteName(source)
 
-        assert name == "custom suite"
+        Assert.assertEquals("custom suite", name)
     }
 
     @Test
@@ -45,7 +47,7 @@ class SuiteRunnerTests implements Serializable {
         final source = new ImpliedSuite()
         final name = runner.getSuiteName(source)
 
-        assert name == ImpliedSuite.class.getName()
+        Assert.assertEquals(ImpliedSuite.class.getName(), name)
     }
 
     @Test
@@ -53,7 +55,7 @@ class SuiteRunnerTests implements Serializable {
         final source = new NoNameSuite()
         final name = runner.getSuiteName(source)
 
-        assert name == NoNameSuite.class.getName()
+        Assert.assertEquals(NoNameSuite.class.getName(), name)
     }
 
     @Test
@@ -61,6 +63,6 @@ class SuiteRunnerTests implements Serializable {
         final source = new SuiteNameFromMethod()
         final name = runner.getSuiteName(source)
 
-        assert name == source.getSuiteName()
+        Assert.assertEquals(source.getSuiteName(), name)
     }
 }

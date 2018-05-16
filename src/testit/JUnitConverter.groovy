@@ -1,6 +1,8 @@
 package testit
 
+import groovy.transform.CompileStatic
 import groovy.util.Node
+
 import java.text.DecimalFormat
 
 import testit.ResultStatus
@@ -11,8 +13,9 @@ import testit.TestResult
 // JUnit 4 spec: http://llg.cubic.org/docs/junit/
 
 class JUnitConverter implements Serializable {
-    final timeFormatter = new DecimalFormat("#.###")
+    DecimalFormat timeFormatter = new DecimalFormat("#.###")
 
+    @CompileStatic
     Node convertTestRunResult(TestRunResult result) {
         final suites = result.suites.collect { convertSuiteResult(it) }
 
@@ -24,6 +27,7 @@ class JUnitConverter implements Serializable {
         ], suites)
     }
 
+    @CompileStatic
     Node convertSuiteResult(SuiteResult result) {
         final tests = result.tests.collect { convertTestResult(it) }
 
@@ -35,6 +39,7 @@ class JUnitConverter implements Serializable {
         ], tests)
     }
 
+    @CompileStatic
     Node convertTestResult(TestResult result) {
         final steps = result.steps.collect { convertStepResult(it) }
         final status = result.getStatus() == ResultStatus.Success ? "pass" : "fail"
@@ -49,6 +54,7 @@ class JUnitConverter implements Serializable {
         ], steps)
     }
 
+    @CompileStatic
     Node convertStepResult(StepResult result) {
         switch (result.category) {
             case StepCategory.Error:
@@ -62,6 +68,7 @@ class JUnitConverter implements Serializable {
         }
     }
 
+    @CompileStatic
     Node convertError(StepResult result) {
         return new Node(null, "error", [
             message: result.message,
@@ -69,6 +76,7 @@ class JUnitConverter implements Serializable {
         ], result.trace)
     }
 
+    @CompileStatic
     Node convertFailure(StepResult result) {
         return new Node(null, "failure", [
             message: result.message,
@@ -76,10 +84,12 @@ class JUnitConverter implements Serializable {
         ], result.trace)
     }
 
+    @CompileStatic
     Node convertStandardError(StepResult result) {
         return new Node(null, "system-err", null, result.message)
     }
 
+    @CompileStatic
     Node convertStandardOutput(StepResult result) {
         return new Node(null, "system-out", null, result.message)
     }

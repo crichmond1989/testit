@@ -1,20 +1,25 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import testit.SuiteResult
 
 class TestRunResult implements Serializable {
     String name
     List<SuiteResult> suites
 
+    @CompileStatic
     int getErrorCount() {
-        return suites?.collect { it.getErrorCount() }.sum() ?: 0
+        return (int) suites?.collect { it.getErrorCount() }.sum() ?: 0
     }
 
+    @CompileStatic
     int getFailureCount() {
-        return suites?.collect { it.getFailureCount() }.sum() ?: 0
+        return (int) suites?.collect { it.getFailureCount() }.sum() ?: 0
     }
 
+    @CompileStatic
     int getSuccessCount() {
-        return suites?.collect { it.getSuccessCount() }.sum() ?: 0
+        return (int) suites?.collect { it.getSuccessCount() }.sum() ?: 0
     }
 }

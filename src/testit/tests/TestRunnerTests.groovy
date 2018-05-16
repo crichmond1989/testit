@@ -9,6 +9,8 @@ import testit.TestRunner
 import testit.TestSetup
 import testit.TestTeardown
 
+import org.junit.Assert
+
 class TestRunnerTests implements Serializable {
     class SuccessfulTestMethod {
         @Test
@@ -42,9 +44,9 @@ class TestRunnerTests implements Serializable {
     }
 
     class TrackStages {
-        def invokedSetup = false
-        def invokedRun = false
-        def invokedTeardown = false
+        boolean invokedSetup = false
+        boolean invokedRun = false
+        boolean invokedTeardown = false
 
         @TestSetup
         void setup() {
@@ -63,9 +65,9 @@ class TestRunnerTests implements Serializable {
     }
 
     class TrackStagesSetupError {
-        def invokedSetup = false
-        def invokedRun = false
-        def invokedTeardown = false
+        boolean invokedSetup = false
+        boolean invokedRun = false
+        boolean invokedTeardown = false
 
         @TestSetup
         void setup() {
@@ -97,14 +99,14 @@ class TestRunnerTests implements Serializable {
         }
     }
 
-    final runner = new TestRunner()
+    TestRunner runner = new TestRunner()
 
     @Test
     void run_correctClassname() {
         final source = new SuccessfulTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.classname == source.class.getName()
+        Assert.assertEquals(source.class.getName(), result.classname)
     }
 
     @Test
@@ -112,7 +114,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.name == "run"
+        Assert.assertEquals("run", result.name)
     }
 
     @Test
@@ -120,7 +122,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.getStatus() == ResultStatus.Success
+        Assert.assertEquals(ResultStatus.Success, result.getStatus())
     }
 
     @Test
@@ -128,7 +130,7 @@ class TestRunnerTests implements Serializable {
         final source = new ErroredTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.getStatus() == ResultStatus.Error
+        Assert.assertEquals(ResultStatus.Error, result.getStatus())
     }
 
     @Test
@@ -136,7 +138,7 @@ class TestRunnerTests implements Serializable {
         final source = new FailedTestMethod()
         final result = runner.run(source, "run")
 
-        assert result.getStatus() == ResultStatus.Failure
+        Assert.assertEquals(ResultStatus.Failure, result.getStatus())
     }
 
     @Test
@@ -145,7 +147,7 @@ class TestRunnerTests implements Serializable {
         
         runner.run(source, "run")
 
-        assert source.invokedSetup
+        Assert.assertTrue(source.invokedSetup)
     }
 
     @Test
@@ -154,7 +156,7 @@ class TestRunnerTests implements Serializable {
         
         runner.run(source, "run")
 
-        assert source.invokedRun
+        Assert.assertTrue(source.invokedRun)
     }
 
     @Test
@@ -163,7 +165,7 @@ class TestRunnerTests implements Serializable {
         
         runner.run(source, "run")
 
-        assert source.invokedTeardown
+        Assert.assertTrue(source.invokedTeardown)
     }
 
     @Test
@@ -172,7 +174,7 @@ class TestRunnerTests implements Serializable {
 
         runner.run(source, "run")
 
-        assert !source.invokedRun
+        Assert.assertFalse(source.invokedRun)
     }
 
     @Test
@@ -181,7 +183,7 @@ class TestRunnerTests implements Serializable {
 
         runner.run(source, "run")
 
-        assert !source.invokedTeardown
+        Assert.assertFalse(source.invokedTeardown)
     }
 
     @Test
@@ -189,7 +191,7 @@ class TestRunnerTests implements Serializable {
         final source = new NoAnnotations()
         final name = runner.getClassname(source)
 
-        assert name == NoAnnotations.class.getName()
+        Assert.assertEquals(NoAnnotations.class.getName(), name)
     }
 
     @Test
@@ -197,7 +199,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuiteClassnameFromAnnotation()
         final name = runner.getClassname(source)
 
-        assert name == "custom.from.annotation"
+        Assert.assertEquals("custom.from.annotation", name)
     }
 
     @Test
@@ -205,7 +207,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuiteClassnameFromMethod()
         final name = runner.getClassname(source)
 
-        assert name == source.getClassname()
+        Assert.assertEquals(source.getClassname(), name)
     }
 
     @Test
@@ -213,7 +215,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulTestMethod()
         final result = runner.invokeTestMethod(source, "run")
 
-        assert !result
+        Assert.assertNull(result)
     }
 
     @Test
@@ -221,7 +223,7 @@ class TestRunnerTests implements Serializable {
         final source = new ErroredTestMethod()
         final result = runner.invokeTestMethod(source, "run")
 
-        assert result.category == StepCategory.Error
+        Assert.assertEquals(StepCategory.Error, result.category)
     }
 
     @Test
@@ -229,7 +231,7 @@ class TestRunnerTests implements Serializable {
         final source = new FailedTestMethod()
         final result = runner.invokeTestMethod(source, "run")
 
-        assert result.category == StepCategory.Failure
+        Assert.assertEquals(StepCategory.Failure, result.category)
     }
 
     @Test
@@ -238,7 +240,7 @@ class TestRunnerTests implements Serializable {
         
         runner.setup(source)
 
-        assert source.invokedSetup
+        Assert.assertTrue(source.invokedSetup)
     }
 
     @Test
@@ -247,7 +249,7 @@ class TestRunnerTests implements Serializable {
         
         runner.teardown(source)
 
-        assert source.invokedTeardown
+        Assert.assertTrue(source.invokedTeardown)
     }
 
     @Test
@@ -255,7 +257,7 @@ class TestRunnerTests implements Serializable {
         final source = new NoAnnotations()
         final result = runner.invokeByAnnotation(source, TestSetup.class)
 
-        assert !result
+        Assert.assertNull(result)
     }
 
     @Test
@@ -263,7 +265,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulAnnotation()
         final result = runner.invokeByAnnotation(source, TestSetup.class)
 
-        assert !result
+        Assert.assertNull(result)
     }
 
     @Test
@@ -271,6 +273,6 @@ class TestRunnerTests implements Serializable {
         final source = new UnsuccessfulAnnotation()
         final result = runner.invokeByAnnotation(source, TestSetup.class)
 
-        assert result.category == StepCategory.Error
+        Assert.assertEquals(StepCategory.Error, result.category)
     }
 }
