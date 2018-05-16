@@ -17,7 +17,7 @@ TestRunResult call(Map args) {
     final publish = args.publish as Boolean ?: true
 
     final converter = new JUnitConverter()
-    final runner = new TestRunRunner(new SuiteRunner(new TestRunner))
+    final runner = new TestRunRunner(new SuiteRunner(new TestRunner()))
 
     final results = runner.run(source)
     final xml = converter.convertTestRunResult(results)
