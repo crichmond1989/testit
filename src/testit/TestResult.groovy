@@ -1,5 +1,7 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import java.util.Date
 
 import testit.ResultStatus
@@ -12,11 +14,13 @@ class TestResult implements Serializable {
     Date end
     List<StepResult> steps = []
 
+    @CompileStatic
     Double getDurationInSeconds() {
         if (start && end)
             return (end.getTime() - start.getTime()) / 1000d
     }
 
+    @CompileStatic
     ResultStatus getStatus() {
         if (!steps)
             return ResultStatus.Success
@@ -30,10 +34,12 @@ class TestResult implements Serializable {
         return ResultStatus.Success
     }
 
+    @CompileStatic
     void recordStart() {
         start = new Date()
     }
 
+    @CompileStatic
     void recordEnd() {
         end = new Date()
     }

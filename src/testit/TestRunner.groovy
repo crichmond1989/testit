@@ -1,5 +1,7 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import java.lang.annotation.Annotation
 import java.util.Date
 
@@ -12,6 +14,7 @@ import testit.TestSetup
 import testit.TestTeardown
 
 class TestRunner implements Serializable {
+    @CompileStatic
     TestResult run(Object source, String method) {
         final result = new TestResult(
             classname: getClassname(source),
@@ -44,6 +47,7 @@ class TestRunner implements Serializable {
         return result
     }
 
+    @CompileStatic
     String getClassname(Object source) {
         final suite = source.class.getAnnotation(Suite.class)
 
@@ -58,6 +62,7 @@ class TestRunner implements Serializable {
         return source.class.getName()
     }
 
+    @CompileStatic
     StepResult invokeTestMethod(Object source, String method) {
         def catchResult
         
@@ -70,14 +75,17 @@ class TestRunner implements Serializable {
         }
     }
 
+    @CompileStatic
     StepResult setup(Object source) {
         return invokeByAnnotation(source, TestSetup.class)
     }
 
+    @CompileStatic
     StepResult teardown(Object source) {
         return invokeByAnnotation(source, TestTeardown.class)
     }
 
+    @CompileStatic
     StepResult invokeByAnnotation(Object source, Class<? extends Annotation> annotation) {
         final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }?.getName()
 

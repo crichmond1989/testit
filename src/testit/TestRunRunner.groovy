@@ -1,5 +1,7 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import testit.SuiteRunner
 import testit.TestRunResult
 
@@ -10,6 +12,7 @@ class TestRunRunner implements Serializable {
         this.suiteRunner = suiteRunner ?: new SuiteRunner()
     }
 
+    @CompileStatic
     TestRunResult run(List source) {
         final results = source.collect { suiteRunner.run(it) }
         

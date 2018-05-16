@@ -1,5 +1,7 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import java.lang.annotation.Annotation
 
 import testit.ReflectionUtils
@@ -19,6 +21,7 @@ class SuiteRunner implements Serializable {
         this.testRunner = testRunner ?: new TestRunner()
     }
 
+    @CompileStatic
     SuiteResult run(Object source) {
         List<TestResult> tests = []
 
@@ -39,6 +42,7 @@ class SuiteRunner implements Serializable {
         return new SuiteResult(name: getSuiteName(source), tests: tests)
     }
 
+    @CompileStatic
     String getSuiteName(Object source) {
         final suite = source.class.getAnnotation(Suite.class)
 
@@ -53,14 +57,17 @@ class SuiteRunner implements Serializable {
         return source.class.getName()
     }
 
+    @CompileStatic
     TestResult setup(Object source) {
         return invokeByAnnotation(source, SuiteSetup.class)
     }
 
+    @CompileStatic
     TestResult teardown(Object source) {
         return invokeByAnnotation(source, SuiteTeardown.class)
     }
 
+    @CompileStatic
     TestResult invokeByAnnotation(Object source, Class<? extends Annotation> annotation) {
         final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }?.getName()
 
