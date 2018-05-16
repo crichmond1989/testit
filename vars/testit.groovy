@@ -4,10 +4,6 @@ import testit.JUnitConverter
 import testit.TestRunResult
 import testit.TestRunRunner
 
-//exp
-import testit.SuiteRunner
-import testit.TestRunner
-
 TestRunResult call(Map args) {
     args = args ?: [:]
 
@@ -17,7 +13,7 @@ TestRunResult call(Map args) {
     final publish = args.publish as Boolean ?: true
 
     final converter = new JUnitConverter()
-    final runner = new TestRunRunner(new SuiteRunner(new TestRunner()))
+    final runner = new TestRunRunner()
 
     final results = runner.run(source)
     final xml = converter.convertTestRunResult(results)
