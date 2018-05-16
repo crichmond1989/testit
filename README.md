@@ -30,7 +30,7 @@ import testit.Test
 
 class SimpleTests implements Serializable {
   @Test
-  void TwoPlusTwoEqualsFour() {
+  void twoPlusTwoEqualsFour() {
     final expected = 4
     final actual = 2 + 2
     
@@ -54,7 +54,32 @@ class SimpleTests implements Serializable {
   }
   
   @Test
-  void TwoPlusTwoEqualsFour() {
+  void twoPlusTwoEqualsFour() {
+    final expected = 4
+    final actual = 2 + 2
+    
+    Assert.assertEquals(expected, actual)
+  }
+}
+```
+
+
+### Test Teardown
+
+```groovy
+import org.junit.Assert
+
+import testit.Test
+import testit.TestTeardown
+
+class SimpleTests implements Serializable {
+  @TestTeardown
+  void teardown() {
+    println("Finishing a test case...")
+  }
+  
+  @Test
+  void twoPlusTwoEqualsFour() {
     final expected = 4
     final actual = 2 + 2
     
