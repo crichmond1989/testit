@@ -18,3 +18,47 @@ testit(source: someTestObjects, destination: "TestResults.xml", publish: true)
 
 ### Dependencies
 [JUnit Plugin](https://plugins.jenkins.io/junit)
+
+## Examples
+
+### Test Class
+
+```groovy
+import org.junit.Assert
+
+import testit.Test
+
+class SimpleTests implements Serializable {
+  @Test
+  void TwoPlusTwoEqualsFour() {
+    final expected = 4
+    final actual = 2 + 2
+    
+    Assert.assertEquals(expected, actual)
+  }
+}
+```
+
+### Test Setup
+
+```groovy
+import org.junit.Assert
+
+import testit.Test
+import testit.TestSetup
+
+class SimpleTests implements Serializable {
+  @TestSetup
+  void setup() {
+    println("Starting a test case...")
+  }
+  
+  @Test
+  void TwoPlusTwoEqualsFour() {
+    final expected = 4
+    final actual = 2 + 2
+    
+    Assert.assertEquals(expected, actual)
+  }
+}
+```
