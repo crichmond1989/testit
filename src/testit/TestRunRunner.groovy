@@ -1,8 +1,11 @@
 package testit
 
+import groovy.transform.CompileStatic
+
 import testit.SuiteRunner
 import testit.TestRunResult
 
+@CompileStatic
 class TestRunRunner implements Serializable {
     SuiteRunner suiteRunner
 
