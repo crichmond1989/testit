@@ -68,6 +68,7 @@ class TestRunner implements Serializable {
         
         try {
             ReflectionUtils.invokeMethod(source, method)
+            return null
         } catch (AssertionError error) {
             return StepResult.failed(error)
         } catch (Throwable error) {
@@ -90,10 +91,11 @@ class TestRunner implements Serializable {
         final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }?.getName()
 
         if (!method)
-            return
+            return null
 
         try {
             ReflectionUtils.invokeMethod(source, method)
+            return null
         } catch (Throwable error) {
             return StepResult.errored(error)
         }
