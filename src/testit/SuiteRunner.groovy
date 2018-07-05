@@ -72,7 +72,7 @@ class SuiteRunner implements Serializable {
         final method = source.class.getDeclaredMethods().find { it.isAnnotationPresent(annotation) }?.getName()
 
         if (!method)
-            return
+            return null
 
         final result = new TestResult(
             classname: testRunner.getClassname(source),
