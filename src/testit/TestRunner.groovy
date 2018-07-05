@@ -68,6 +68,7 @@ class TestRunner implements Serializable {
         
         try {
             ReflectionUtils.invokeMethod(source, method)
+            return null
         } catch (AssertionError error) {
             return StepResult.failed(error)
         } catch (Throwable error) {
