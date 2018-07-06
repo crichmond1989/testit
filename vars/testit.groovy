@@ -21,8 +21,6 @@ TestRunResult call(Map args) {
 
     writeFile(file: destination, text: data)
 
-    archiveArtifacts(artifacts: "**")
-
     if (publish)
         junit(testResults: destination)
 
