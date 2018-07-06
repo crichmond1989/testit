@@ -17,9 +17,7 @@ TestRunResult call(Map args) {
 
     final results = runner.run(source)
     final xml = converter.convertTestRunResult(results)
-    final data = XmlUtil.serialize(xml)
-
-    println data
+    final data = XmlUtil.serialize(xml).trim().replace("\uFEFF", "")
 
     writeFile(file: destination, text: data)
 
