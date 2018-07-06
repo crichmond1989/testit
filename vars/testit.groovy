@@ -9,7 +9,7 @@ TestRunResult call(Map args) {
 
     final source = args.source
     
-    final destination = args.destination ?: "TestResults.xml"
+    final destination = args.destination ?: "testit/TestResults.xml"
     final publish = args.publish as Boolean ?: true
 
     final converter = new JUnitConverter()
@@ -17,7 +17,7 @@ TestRunResult call(Map args) {
 
     final results = runner.run(source)
     final xml = converter.convertTestRunResult(results)
-    final data = XmlUtil.serialize(xml)
+    final data = XmlUtil.serialize(xml).trim().replace("\uFEFF", "")
 
     writeFile(file: destination, text: data)
 
