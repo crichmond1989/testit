@@ -19,7 +19,11 @@ TestRunResult call(Map args) {
     final xml = converter.convertTestRunResult(results)
     final data = XmlUtil.serialize(xml)
 
+    println data
+
     writeFile(file: destination, text: data)
+
+    archiveArtifacts(artifacts: "**")
 
     if (publish)
         junit(testResults: destination)
