@@ -1,3 +1,5 @@
+import groovy.xml.XmlUtil
+
 pipeline {
     agent any
 
