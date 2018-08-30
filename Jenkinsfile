@@ -10,15 +10,7 @@ pipeline {
                     final testFiles = findFiles(glob: "src/testit/tests/*Tests.groovy")
                     final testClasses = testFiles.collect { it.name - ".groovy" }
 
-                    println testClasses
-
-                    final source = testClasses.collect {
-                        final test = testit.tests."$it".new()
-
-                        test.script = this
-
-                        return test
-                    }
+                    final source = testClasses.collect { testit.tests."$it".new() }
         
                     final destination = "testit/TestResults.xml"
 
