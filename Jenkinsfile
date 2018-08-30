@@ -8,7 +8,7 @@ pipeline {
                     final testit = library("testit@$BRANCH_NAME").testit
 
                     final testFiles = findFiles(glob: "src/testit/tests/*Tests.groovy")
-                    final testClasses = testFiles.collect { it.name }
+                    final testClasses = testFiles.collect { it.name - ".groovy" }
 
                     println testClasses
 
