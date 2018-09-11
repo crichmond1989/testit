@@ -24,7 +24,7 @@ List call(Map args) {
 }
 
 private List getClassNamesByGlob(String namespace, String glob) {
-    if (!Jenkins.instance.pluginManager.getPlugin("Pipeline+Utility+Steps+Plugin")) {
+    if (!Jenkins.instance.pluginManager.getPlugin("pipeline-utility-steps")) {
         throw new Exception("hydrate.glob requires the Pipeline Utility Steps Plugin")
     }
 
