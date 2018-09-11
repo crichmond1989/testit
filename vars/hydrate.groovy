@@ -12,7 +12,7 @@ List call(Map args) {
         final instance = nsObject."$it".new()
 
         if (setter) {
-            setter.call(it)
+            setter.call(instance)
         }
 
         return instance
