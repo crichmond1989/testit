@@ -6,11 +6,10 @@ List call(Map args) {
 
     assert args.library
     assert args.namespace
-    assert args.classNames || args.glob
 
     final setter = args.setter
 
-    final classNames = args.classNames ?: getClassNamesByGlob(args.glob)
+    final classNames = args.classNames ?: getClassNamesByGlob(namespace, args.glob)
     final nsObject = library(identifier: libraryName, changelog: false)."$namespace"
 
     return classNames.collect {
@@ -24,9 +23,13 @@ List call(Map args) {
     }
 }
 
-private List getClassNamesByGlob(String glob) {
+private List getClassNamesByGlob(String namespace, String glob) {
     if (!Jenkins.instance.pluginManager.getPlugin("Pipeline+Utility+Steps+Plugin")) {
         throw new Exception("hydrate.glob requires the Pipeline Utility Steps Plugin")
+    }
+
+    if (!glob) {
+        glob = "src/" + namespace.replace(".", "/") + "/*.groovy"
     }
 
     return findFiles(glob: glob).collect { it.name - ".groovy" }
