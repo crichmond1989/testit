@@ -18,8 +18,10 @@ pipeline {
 
                     final converter = testit.JUnitConverter.new()
                     final runner = testit.TestRunRunner.new()
+                    final logger = testit.Logger.new()
 
-                    runner.onLog = { println(it) }
+                    runner.logger = logger
+                    logger.log = { println(it) }
 
                     final results = runner.run(source)
                     final xml = converter.convertTestRunResult(results)
