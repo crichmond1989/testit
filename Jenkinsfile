@@ -19,6 +19,8 @@ pipeline {
                     final converter = testit.JUnitConverter.new()
                     final runner = testit.TestRunRunner.new()
 
+                    runner.onLog = { println(it) }
+
                     final results = runner.run(source)
                     final xml = converter.convertTestRunResult(results)
                     final data = XmlUtil.serialize(xml).trim().replace("\uFEFF", "")
