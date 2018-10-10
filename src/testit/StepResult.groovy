@@ -29,6 +29,24 @@ class StepResult implements Serializable {
     }
 
     @CompileStatic
+    String[] getStatusLog() {
+        final rows = []
+
+        rows += "Result: ${this.status}"
+
+        if (this.type)
+            rows += "Error: ${this.type}"
+
+        if (this.message)
+            rows += "Message: ${this.message}"
+
+        if (this.trace)
+            rows += "Stack: ${this.trace}"
+
+        return rows
+    }
+
+    @CompileStatic
     static StepResult completed() {
         return new StepResult(
             category: StepCategory.Complete
