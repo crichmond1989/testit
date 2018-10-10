@@ -25,10 +25,10 @@ class TestResult implements Serializable {
         if (!steps)
             return ResultStatus.Success
 
-        if (steps.any { it.result == ResultStatus.Error })
+        if (steps.any { it.status == ResultStatus.Error })
             return ResultStatus.Error
 
-        if (steps.any { it.result == ResultStatus.Failure })
+        if (steps.any { it.status == ResultStatus.Failure })
             return ResultStatus.Failure
 
         return ResultStatus.Success
