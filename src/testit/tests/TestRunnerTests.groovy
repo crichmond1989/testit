@@ -215,7 +215,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulTestMethod()
         final result = runner.invokeTestMethod(source, "run")
 
-        Assert.assertNull(result)
+        Assert.assertEquals(StepCategory.Complete, result.category)
     }
 
     @Test
@@ -265,7 +265,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulAnnotation()
         final result = runner.invokeByAnnotation(source, TestSetup.class)
 
-        Assert.assertNull(result)
+        Assert.assertEquals(StepCategory.Complete, result.category)
     }
 
     @Test
