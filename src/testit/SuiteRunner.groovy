@@ -44,7 +44,7 @@ class SuiteRunner implements Serializable {
 
         final testMethods = source.class.getDeclaredMethods().findAll { it.isAnnotationPresent(Test.class) }.collect { it.getName() }
         
-        tests += testMethods.collect { testRunner.run(source, it) }
+        tests += testMethods.collect { this.testRunner.run(source, it) }
 
         final teardownResult = teardown(source)
 
