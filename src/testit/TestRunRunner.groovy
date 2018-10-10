@@ -20,7 +20,7 @@ class TestRunRunner implements Serializable {
 
     @CompileStatic
     TestRunResult run(List source) {
-        final results = source.collect { suiteRunner.run(it) }
+        final results = source.collect { this.suiteRunner.run(it) }
         
         return new TestRunResult(name: "", suites: results)
     }
