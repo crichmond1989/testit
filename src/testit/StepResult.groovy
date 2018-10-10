@@ -19,11 +19,11 @@ class StepResult implements Serializable {
             case StepCategory.StandardError:
                 return ResultStatus.Error
 
-            case StepCategory.Complete:
+            case StepCategory.Failure:
                 return ResultStatus.Failure
 
+            case StepCategory.Complete:
             case StepCategory.StandardOutput:
-            case StepCategory.Success:
                 return ResultStatus.Success
         }
     }
@@ -31,7 +31,7 @@ class StepResult implements Serializable {
     @CompileStatic
     static StepResult completed() {
         return new StepResult(
-            category: StepCategory.Success
+            category: StepCategory.Complete
         )
     }
 
