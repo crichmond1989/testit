@@ -22,7 +22,7 @@ class SuiteRunner implements Serializable {
     TestRunner getTestRunner() {
         final runner = this.@testRunner ?: new TestRunner()
 
-        runner.logger = logger
+        runner.logger = this.logger
 
         return runner
     }
@@ -33,13 +33,13 @@ class SuiteRunner implements Serializable {
 
         final suiteName = getSuiteName(source)
 
-        logger?.log("** $suiteName")
+        this.logger?.log("** $suiteName")
 
         final setupResult = setup(source)
 
         if (setupResult) {
             tests += setupResult
-            logger?.log("**** Setup: ${setupResult.status}")
+            this.logger?.log("**** Setup: ${setupResult.status}")
         }
 
         final testMethods = source.class.getDeclaredMethods().findAll { it.isAnnotationPresent(Test.class) }.collect { it.getName() }
@@ -50,7 +50,7 @@ class SuiteRunner implements Serializable {
 
         if (teardownResult) {
             tests += teardownResult
-            logger?.log("**** Teardown: ${teardownResult.status}")
+            this.logger?.log("**** Teardown: ${teardownResult.status}")
         }
         
         return new SuiteResult(name: suiteName, tests: tests)

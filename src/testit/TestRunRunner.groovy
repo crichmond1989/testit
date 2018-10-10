@@ -13,7 +13,7 @@ class TestRunRunner implements Serializable {
     SuiteRunner getSuiteRunner() {
         final runner = this.@suiteRunner ?: new SuiteRunner()
 
-        runner.logger = logger
+        runner.logger = this.logger
 
         return runner
     }
