@@ -2,14 +2,20 @@ package testit
 
 import groovy.transform.CompileStatic
 
+import testit.Logger
 import testit.SuiteRunner
 import testit.TestRunResult
 
 class TestRunRunner implements Serializable {
+    Logger logger
     SuiteRunner suiteRunner
 
-    TestRunRunner(SuiteRunner suiteRunner = null) {
-        this.suiteRunner = suiteRunner ?: new SuiteRunner()
+    SuiteRunner getSuiteRunner() {
+        final runner = this.@suiteRunner ?: new SuiteRunner()
+
+        runner.logger = logger
+
+        return runner
     }
 
     @CompileStatic

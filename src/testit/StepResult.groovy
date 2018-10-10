@@ -2,6 +2,7 @@ package testit
 
 import groovy.transform.CompileStatic
 
+import testit.ResultStatus
 import testit.StepCategory
 
 class StepResult implements Serializable {
@@ -10,6 +11,29 @@ class StepResult implements Serializable {
     String type
     Throwable error
     String trace
+
+    @CompileStatic
+    ResultStatus getStatus() {
+        switch(category) {
+            case StepCategory.Error:
+            case StepCategory.StandardError:
+                return ResultStatus.Error
+
+            case StepCategory.Complete:
+                return ResultStatus.Failure
+
+            case StepCategory.StandardOutput:
+            case StepCategory.Success:
+                return ResultStatus.Success
+        }
+    }
+
+    @CompileStatic
+    static StepResult completed() {
+        return new StepResult(
+            category: StepCategory.Success
+        )
+    }
 
     @CompileStatic
     static StepResult errored(Throwable error) {

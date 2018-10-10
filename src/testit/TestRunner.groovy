@@ -5,6 +5,7 @@ import groovy.transform.CompileStatic
 import java.lang.annotation.Annotation
 import java.util.Date
 
+import testit.Logger
 import testit.ReflectionUtils
 import testit.ResultStatus
 import testit.StepResult
@@ -14,8 +15,12 @@ import testit.TestSetup
 import testit.TestTeardown
 
 class TestRunner implements Serializable {
+    Logger logger
+
     @CompileStatic
     TestResult run(Object source, String method) {
+        logger?.log("**** $method")
+        
         final result = new TestResult(
             classname: getClassname(source),
             name: method
@@ -25,23 +30,29 @@ class TestRunner implements Serializable {
 
         final setupResult = setup(source)
 
-        if (setupResult)
+        if (setupResult) {
             result.steps += setupResult
+            logger?.log("****** Setup: ${setupResult.status}")
+        }
 
         if (result.getStatus() != ResultStatus.Success) {
             result.recordEnd()
             return result
         }
 
-        final bodyResults = invokeTestMethod(source, method)
+        final bodyResult = invokeTestMethod(source, method)
 
-        if (bodyResults)
-            result.steps += bodyResults
+        if (bodyResult) {
+            result.steps += bodyResult
+            logger?.log("****** Result: ${bodyResult.status}")
+        }
 
         final teardownResult = teardown(source)
 
-        if (teardownResult)
+        if (teardownResult) {
             result.steps += teardownResult
+            logger?.log("****** Teardown: ${teardownResult.status}")
+        }
 
         result.recordEnd()
         return result
@@ -68,7 +79,7 @@ class TestRunner implements Serializable {
         
         try {
             ReflectionUtils.invokeMethod(source, method)
-            return null
+            return StepResult.completed()
         } catch (AssertionError error) {
             return StepResult.failed(error)
         } catch (Throwable error) {
@@ -95,7 +106,7 @@ class TestRunner implements Serializable {
 
         try {
             ReflectionUtils.invokeMethod(source, method)
-            return null
+            return StepResult.completed()
         } catch (Throwable error) {
             return StepResult.errored(error)
         }

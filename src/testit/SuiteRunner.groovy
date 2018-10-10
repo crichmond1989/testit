@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 
 import java.lang.annotation.Annotation
 
+import testit.Logger
 import testit.ReflectionUtils
 import testit.StepResult
 import testit.Suite
@@ -15,20 +16,31 @@ import testit.TestResult
 import testit.TestRunner
 
 class SuiteRunner implements Serializable {
+    Logger logger
     TestRunner testRunner
 
-    SuiteRunner(TestRunner testRunner = null) {
-        this.testRunner = testRunner ?: new TestRunner()
+    TestRunner getTestRunner() {
+        final runner = this.@testRunner ?: new TestRunner()
+
+        runner.logger = logger
+
+        return runner
     }
 
     @CompileStatic
     SuiteResult run(Object source) {
         List<TestResult> tests = []
 
+        final suiteName = getSuiteName(source)
+
+        logger?.log("** $suiteName")
+
         final setupResult = setup(source)
 
-        if (setupResult)
+        if (setupResult) {
             tests += setupResult
+            logger?.log("**** Setup: ${setupResult.status}")
+        }
 
         final testMethods = source.class.getDeclaredMethods().findAll { it.isAnnotationPresent(Test.class) }.collect { it.getName() }
         
@@ -36,10 +48,12 @@ class SuiteRunner implements Serializable {
 
         final teardownResult = teardown(source)
 
-        if (teardownResult)
+        if (teardownResult) {
             tests += teardownResult
+            logger?.log("**** Teardown: ${teardownResult.status}")
+        }
         
-        return new SuiteResult(name: getSuiteName(source), tests: tests)
+        return new SuiteResult(name: suiteName, tests: tests)
     }
 
     @CompileStatic
@@ -83,6 +97,7 @@ class SuiteRunner implements Serializable {
 
         try {
             ReflectionUtils.invokeMethod(source, method)
+            result.steps += StepResult.completed()
         } catch(Throwable error) {
             result.steps += StepResult.errored(error)
         }
