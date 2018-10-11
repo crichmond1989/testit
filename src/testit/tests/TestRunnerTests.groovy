@@ -50,6 +50,20 @@ class TestRunnerTests implements Serializable {
         }
     }
 
+    class TrackLogger extends Logger {
+        String[] trace = []
+        
+        @Override
+        void logStepResult(String name, StepResult value) {
+            trace += "logStepResult: $name".toString()
+        }
+
+        @Override
+        void logTestName(String value) {
+            trace += "logTestName: $value".toString()
+        }
+    }
+
     class TrackStages {
         boolean invokedSetup = false
         boolean invokedRun = false
@@ -106,14 +120,7 @@ class TestRunnerTests implements Serializable {
         }
     }
 
-    TestRunner getRunner(Closure onLog = null) { 
-        final _runner = new TestRunner()
-
-        if (onLog)
-            _runner.logger = new Logger(log: onLog)
-
-        return _runner
-    }
+    TestRunner getRunner(Logger logger = null) { new TestRunner(logger: logger) }
 
     @Test
     void run_correctClassname() {
@@ -134,57 +141,51 @@ class TestRunnerTests implements Serializable {
     @Test
     void run_log_noSetup() {
         final source = new OnlyTestMethod()
-        final log = []
+        final _runner = getRunner(new TrackLogger())
 
-        final _runner = getRunner({ log += it.toString() })
+        runner.run(source, "run")
 
-        Assert.assertThat(log, CoreMatchers.not(CoreMatchers.hasItem("****** Test Setup")))
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.not(CoreMatchers.hasItem("logStepResult: Test Setup")))
     }
 
     @Test
     void run_log_noTeardown() {
         final source = new OnlyTestMethod()
-        final log = []
+        final _runner = getRunner(new TrackLogger())
 
-        final _runner = getRunner({ log += it.toString() })
+        runner.run(source, "run")
 
-        Assert.assertThat(log, CoreMatchers.not(CoreMatchers.hasItem("****** Test Teardown")))
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.not(CoreMatchers.hasItem("logStepResult: Test Teardown")))
     }
 
     @Test
     void run_log_setup() {
-        final source = new TrackStages()
-        final log = []
+        final source = new OnlyTestMethod()
+        final _runner = getRunner(new TrackLogger())
 
-        final _runner = getRunner({ log += it.toString() })
+        runner.run(source, "run")
 
-        _runner.run(source, "run")
-
-        Assert.assertThat(log, CoreMatchers.hasItem("****** Test Setup"))
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logStepResult: Test Setup"))
     }
 
     @Test
     void run_log_teardown() {
-        final source = new TrackStages()
-        final log = []
+        final source = new OnlyTestMethod()
+        final _runner = getRunner(new TrackLogger())
 
-        final _runner = getRunner({ log += it.toString() })
+        runner.run(source, "run")
 
-        _runner.run(source, "run")
-
-        Assert.assertThat(log, CoreMatchers.hasItem("****** Test Teardown"))
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logStepResult: Test Teardown"))
     }
 
     @Test
     void run_log_testCase() {
-        final source = new SuccessfulTestMethod()
-        final log = []
-        
-        final _runner = getRunner({ log += it.toString() })
+        final source = new OnlyTestMethod()
+        final _runner = getRunner(new TrackLogger())
 
-        _runner.run(source, "run")
+        runner.run(source, "run")
 
-        Assert.assertEquals("**** Test Case: run", log[0])
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logTestName: run"))
     }
 
     @Test
