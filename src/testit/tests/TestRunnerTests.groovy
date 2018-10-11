@@ -14,6 +14,11 @@ import org.hamcrest.CoreMatchers
 import org.junit.Assert
 
 class TestRunnerTests implements Serializable {
+    class OnlyTestMethod {
+        @Test
+        void run() {}
+    }
+    
     class SuccessfulTestMethod {
         @Test
         void run() {}
@@ -127,19 +132,27 @@ class TestRunnerTests implements Serializable {
     }
 
     @Test
-    void run_logsName() {
-        final source = new SuccessfulTestMethod()
+    void run_log_noSetup() {
+        final source = new OnlyTestMethod()
         final log = []
-        
+
         final _runner = getRunner({ log += it.toString() })
 
-        _runner.run(source, "run")
-
-        Assert.assertEquals("**** Test Case: run", log[0])
+        Assert.assertThat(log, CoreMatchers.not(CoreMatchers.hasItem("****** Test Setup")))
     }
 
     @Test
-    void run_logsSetupResult() {
+    void run_log_noTeardown() {
+        final source = new OnlyTestMethod()
+        final log = []
+
+        final _runner = getRunner({ log += it.toString() })
+
+        Assert.assertThat(log, CoreMatchers.not(CoreMatchers.hasItem("****** Test Teardown")))
+    }
+
+    @Test
+    void run_log_setup() {
         final source = new TrackStages()
         final log = []
 
@@ -151,7 +164,7 @@ class TestRunnerTests implements Serializable {
     }
 
     @Test
-    void run_logsTeardownResult() {
+    void run_log_teardown() {
         final source = new TrackStages()
         final log = []
 
@@ -160,6 +173,18 @@ class TestRunnerTests implements Serializable {
         _runner.run(source, "run")
 
         Assert.assertThat(log, CoreMatchers.hasItem("****** Test Teardown"))
+    }
+
+    @Test
+    void run_log_testCase() {
+        final source = new SuccessfulTestMethod()
+        final log = []
+        
+        final _runner = getRunner({ log += it.toString() })
+
+        _runner.run(source, "run")
+
+        Assert.assertEquals("**** Test Case: run", log[0])
     }
 
     @Test
