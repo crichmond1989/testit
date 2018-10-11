@@ -18,10 +18,14 @@ class TestRunRunner implements Serializable {
         return runner
     }
 
-    @CompileStatic
     TestRunResult run(List source) {
-        final results = source.collect { this.suiteRunner.run(it) }
-        
-        return new TestRunResult(name: "", suites: results)
+        final runner = this.getSuiteRunner()
+        final results = source.collect { runner.run(it) }
+
+        final fullResult = new TestRunResult(name: "", suites: results)
+
+        this.logger?.log(fullResult.statusLog)
+
+        return fullResult
     }
 }
