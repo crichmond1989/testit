@@ -161,7 +161,7 @@ class TestRunnerTests implements Serializable {
 
     @Test
     void run_log_setup() {
-        final source = new OnlyTestMethod()
+        final source = new TrackStages()
         final _runner = getRunner(new TrackLogger())
 
         _runner.run(source, "run")
@@ -171,7 +171,7 @@ class TestRunnerTests implements Serializable {
 
     @Test
     void run_log_teardown() {
-        final source = new OnlyTestMethod()
+        final source = new TrackStages()
         final _runner = getRunner(new TrackLogger())
 
         _runner.run(source, "run")
