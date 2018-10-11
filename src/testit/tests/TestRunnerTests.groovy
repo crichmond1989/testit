@@ -52,7 +52,7 @@ class TestRunnerTests implements Serializable {
     }
 
     class TrackLogger extends Logger {
-        String[] trace = []
+        List<String> trace = []
         
         @Override
         void logStepResult(String name, StepResult value) {
