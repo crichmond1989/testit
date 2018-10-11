@@ -101,11 +101,11 @@ class TestRunnerTests implements Serializable {
         }
     }
 
-    TestRunner getRunner(Closure onLog = null) { 
+    TestRunner getRunner(String[] log = null) { 
         final _runner = new TestRunner()
 
-        if (onLog)
-            _runner.logger = new Logger(log: onLog)
+        if (log)
+            _runner.logger = new Logger(log: { log += it.toString() })
 
         return _runner
     }
@@ -131,7 +131,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulTestMethod()
         final log = []
         
-        final _runner = getRunner({ log += it.toString() })
+        final _runner = getRunner(log)
 
         _runner.run(source, "run")
 
@@ -143,7 +143,7 @@ class TestRunnerTests implements Serializable {
         final source = new TrackStages()
         final log = []
 
-        final _runner = getRunner({ log += it.toString() })
+        final _runner = getRunner(log)
 
         _runner.run(source, "run")
 

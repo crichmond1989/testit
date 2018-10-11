@@ -3,6 +3,10 @@ import groovy.xml.XmlUtil
 pipeline {
     agent any
 
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+    }
+
     stages {
         stage("Tests") {
             steps {
