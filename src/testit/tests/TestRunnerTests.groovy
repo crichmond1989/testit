@@ -147,7 +147,19 @@ class TestRunnerTests implements Serializable {
 
         _runner.run(source, "run")
 
-        Assert.assertThat(log, CoreMatchers.hasItem("****** Result: Success"))
+        Assert.assertThat(log, CoreMatchers.hasItem("****** Test Setup"))
+    }
+
+    @Test
+    void run_logsTeardownResult() {
+        final source = new TrackStages()
+        final log = []
+
+        final _runner = getRunner({ log += it.toString() })
+
+        _runner.run(source, "run")
+
+        Assert.assertThat(log, CoreMatchers.hasItem("****** Test Teardown"))
     }
 
     @Test

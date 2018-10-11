@@ -33,8 +33,10 @@ class TestRunner implements Serializable {
         if (setupResult) {
             result.steps += setupResult
             
-            if (this.logger)
-                setupResult.statusLog.each { this.logger.log("****** $it") }
+            if (this.logger) {
+                this.logger.log("****** Test Setup")
+                setupResult.statusLog.each { this.logger.log("******** $it") }
+            }
         }
 
         if (result.getStatus() != ResultStatus.Success) {
@@ -56,8 +58,10 @@ class TestRunner implements Serializable {
         if (teardownResult) {
             result.steps += teardownResult
             
-            if (this.logger)
-                teardownResult.statusLog.each { this.logger.log("****** $it") }
+            if (this.logger) {
+                this.logger.log("****** Test Teardown")
+                teardownResult.statusLog.each { this.logger.log("******** $it") }
+            }
         }
 
         result.recordEnd()
