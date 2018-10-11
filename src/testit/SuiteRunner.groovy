@@ -33,13 +33,13 @@ class SuiteRunner implements Serializable {
 
         final suiteName = getSuiteName(source)
 
-        this.logger?.log("** $suiteName")
+        this.logger?.logSuiteName(suiteName)
 
         final setupResult = setup(source)
 
         if (setupResult) {
             tests += setupResult
-            this.logger?.log("**** Setup: ${setupResult.status}")
+            this.logger?.logTestResult("Suite Setup", setupResult)
         }
 
         final testMethods = source.class.getDeclaredMethods().findAll { it.isAnnotationPresent(Test.class) }.collect { it.getName() }
@@ -50,7 +50,7 @@ class SuiteRunner implements Serializable {
 
         if (teardownResult) {
             tests += teardownResult
-            this.logger?.log("**** Teardown: ${teardownResult.status}")
+            this.logger?.logTestResult("Suite Teardown", teardownResult)
         }
         
         return new SuiteResult(name: suiteName, tests: tests)

@@ -19,7 +19,7 @@ class TestRunner implements Serializable {
 
     @CompileStatic
     TestResult run(Object source, String method) {
-        this.logger?.log("**** Test Case: $method")
+        this.logger?.logTestName(method)
         
         final result = new TestResult(
             classname: getClassname(source),
@@ -32,14 +32,11 @@ class TestRunner implements Serializable {
 
         if (setupResult) {
             result.steps += setupResult
-            
-            if (this.logger) {
-                this.logger.log("****** Test Setup")
-                setupResult.statusLog.each { this.logger.log("******** $it") }
-            }
+
+            this.logger?.logStepResult("Test Setup", setupResult)
         }
 
-        if (result.getStatus() != ResultStatus.Success) {
+        if (result.status != ResultStatus.Success) {
             result.recordEnd()
             return result
         }
@@ -49,19 +46,15 @@ class TestRunner implements Serializable {
         if (bodyResult) {
             result.steps += bodyResult
 
-            if (this.logger)
-                bodyResult.statusLog.each { this.logger.log("****** $it") }
+            this.logger?.logStepResult(null, bodyResult)
         }
 
         final teardownResult = teardown(source)
 
         if (teardownResult) {
             result.steps += teardownResult
-            
-            if (this.logger) {
-                this.logger.log("****** Test Teardown")
-                teardownResult.statusLog.each { this.logger.log("******** $it") }
-            }
+
+            this.logger?.logStepResult("Test Teardown", teardownResult)
         }
 
         result.recordEnd()
