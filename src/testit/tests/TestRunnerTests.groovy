@@ -9,6 +9,7 @@ import testit.TestRunner
 import testit.TestSetup
 import testit.TestTeardown
 
+import org.hamcrest.CoreMatchers
 import org.junit.Assert
 
 class TestRunnerTests implements Serializable {
@@ -99,7 +100,14 @@ class TestRunnerTests implements Serializable {
         }
     }
 
-    TestRunner runner = new TestRunner()
+    TestRunner getRunner(Closure onLog = null) { 
+        final _runner = new TestRunner()
+
+        if (onLog)
+            _runner.logger = new Logger(log: onLog)
+
+        return _runner
+    }
 
     @Test
     void run_correctClassname() {
@@ -115,6 +123,30 @@ class TestRunnerTests implements Serializable {
         final result = runner.run(source, "run")
 
         Assert.assertEquals("run", result.name)
+    }
+
+    @Test
+    void run_logsName() {
+        final source = new SuccessfulTestMethod()
+        final log = []
+        
+        final _runner = getRunner({ log += it })
+
+        _runner.run(source, "run")
+
+        Assert.assertEquals("**** Test Case: run", log[0])
+    }
+
+    @Test
+    void run_logsSetupResult() {
+        final source = new TrackStages()
+        final log = []
+
+        final _runner = getRunner({ log += it })
+
+        _runner.run(source, "run")
+
+        Assert.assertThat(log, CoreMatchers.hasItem("****** Result: Success"))
     }
 
     @Test

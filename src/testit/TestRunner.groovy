@@ -19,7 +19,7 @@ class TestRunner implements Serializable {
 
     @CompileStatic
     TestResult run(Object source, String method) {
-        this.logger?.log("**** $method")
+        this.logger?.log("**** Test Case: $method")
         
         final result = new TestResult(
             classname: getClassname(source),
