@@ -3,6 +3,7 @@ package testit.tests
 import testit.Logger
 import testit.ResultStatus
 import testit.StepCategory
+import testit.StepResult
 import testit.Suite
 import testit.SuiteClassname
 import testit.Test
