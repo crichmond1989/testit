@@ -29,7 +29,7 @@ class StepResult implements Serializable {
     }
 
     @CompileStatic
-    String[] getStatusLog() {
+    List<String> getStatusLog() {
         final rows = []
 
         rows += "Result: $status"
@@ -37,20 +37,20 @@ class StepResult implements Serializable {
         switch(status) {
             case ResultStatus.Error:
                 if (type)
-                    rows += "Error: $type"
+                    rows += "Error: $type".toString()
                 
                 if (this.message)
-                    rows += "Message: $message"
+                    rows += "Message: $message".toString()
 
                 if (this.trace)
-                    rows += "Stack: $trace"
+                    rows += "Stack: $trace".toString()
                 
                 break
             
             case ResultStatus.Failure:
             case ResultStatus.Success:
                 if (this.message)
-                    rows += "Message: $message"
+                    rows += "Message: $message".toString()
                 
                 break
         }
@@ -69,10 +69,10 @@ class StepResult implements Serializable {
     static StepResult errored(Throwable error) {
         return new StepResult(
             category: StepCategory.Error,
-            message: error.getMessage(),
-            type: error.class.getName(),
+            message: error.message,
+            type: error.class.name,
             error: error,
-            trace: error.getStackTrace().join("\n")
+            trace: error.stackTrace?.join("\n")
         )
     }
 
@@ -80,10 +80,10 @@ class StepResult implements Serializable {
     static StepResult failed(AssertionError error) {
         return new StepResult(
             category: StepCategory.Failure,
-            message: error.getMessage(),
-            type: error.class.getName(),
+            message: error.message,
+            type: error.class.name,
             error: error,
-            trace: error.getStackTrace().join("\n")
+            trace: error.stackTrace?.join("\n")
         )
     }
 
