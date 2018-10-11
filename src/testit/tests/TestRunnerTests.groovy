@@ -144,7 +144,7 @@ class TestRunnerTests implements Serializable {
         final source = new OnlyTestMethod()
         final _runner = getRunner(new TrackLogger())
 
-        runner.run(source, "run")
+        _runner.run(source, "run")
 
         Assert.assertThat(_runner.logger.trace, CoreMatchers.not(CoreMatchers.hasItem("logStepResult: Test Setup")))
     }
@@ -154,7 +154,7 @@ class TestRunnerTests implements Serializable {
         final source = new OnlyTestMethod()
         final _runner = getRunner(new TrackLogger())
 
-        runner.run(source, "run")
+        _runner.run(source, "run")
 
         Assert.assertThat(_runner.logger.trace, CoreMatchers.not(CoreMatchers.hasItem("logStepResult: Test Teardown")))
     }
@@ -164,7 +164,7 @@ class TestRunnerTests implements Serializable {
         final source = new OnlyTestMethod()
         final _runner = getRunner(new TrackLogger())
 
-        runner.run(source, "run")
+        _runner.run(source, "run")
 
         Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logStepResult: Test Setup"))
     }
@@ -174,7 +174,7 @@ class TestRunnerTests implements Serializable {
         final source = new OnlyTestMethod()
         final _runner = getRunner(new TrackLogger())
 
-        runner.run(source, "run")
+        _runner.run(source, "run")
 
         Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logStepResult: Test Teardown"))
     }
@@ -184,7 +184,7 @@ class TestRunnerTests implements Serializable {
         final source = new OnlyTestMethod()
         final _runner = getRunner(new TrackLogger())
 
-        runner.run(source, "run")
+        _runner.run(source, "run")
 
         Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logTestName: run"))
     }
