@@ -32,16 +32,28 @@ class StepResult implements Serializable {
     String[] getStatusLog() {
         final rows = []
 
-        rows += "Result: ${this.status}"
+        rows += "Result: $status"
 
-        if (this.type)
-            rows += "Error: ${this.type}"
+        switch(status) {
+            case ResultStatus.Error:
+                if (type)
+                    rows += "Error: $type"
+                
+                if (this.message)
+                    rows += "Message: $message"
 
-        if (this.message)
-            rows += "Message: ${this.message}"
-
-        if (this.trace)
-            rows += "Stack: ${this.trace}"
+                if (this.trace)
+                    rows += "Stack: $trace"
+                
+                break
+            
+            case ResultStatus.Failure:
+            case ResultStatus.Success:
+                if (this.message)
+                    rows += "Message: $message"
+                
+                break
+        }
 
         return rows
     }
