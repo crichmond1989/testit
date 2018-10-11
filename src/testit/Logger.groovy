@@ -5,26 +5,38 @@ class Logger implements Serializable {
     int lineWidth = 80
 
     void logStepResult(String name, StepResult value) {
+        final lines = []
+        
         if (name) {
-            log(name)
-            value.statusLog.each { log("\t$it" )}
+            lines += name
+            value.statusLog.each { lines += "\t$it" }
         } else {
-            value.statusLog.each { log(it) }
+            lines += value.statusLog
         }
 
-        log("-" * lineWidth)
+        lines += "-" * lineWidth
+
+        log(lines.join("\n"))
     }
 
     void logSuiteName(String value) {
-        log("+" * lineWidth)
-        log(" Suite: $value")
-        log("+" * lineWidth)
+        final lines = []
+        
+        lines += "+" * lineWidth
+        lines += "Suite: $value"
+        lines += "+" * lineWidth
+
+        log(lines.join("\n"))
     }
 
     void logTestName(String value) {
-        log("=" * lineWidth)
-        log(" Test Case: $value")
-        log("=" * lineWidth)
+        final lines = []
+        
+        lines += "=" * lineWidth
+        lines += "Test Case: $value"
+        lines += "=" * lineWidth
+
+        log(lines.join("\n"))
     }
 
     void logTestResult(String name, TestResult value) {
