@@ -3,6 +3,10 @@ import groovy.xml.XmlUtil
 pipeline {
     agent any
 
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+    }
+
     stages {
         stage("Tests") {
             steps {
@@ -18,6 +22,10 @@ pipeline {
 
                     final converter = testit.JUnitConverter.new()
                     final runner = testit.TestRunRunner.new()
+                    final logger = testit.Logger.new()
+
+                    runner.logger = logger
+                    logger.log = { println(it) }
 
                     final results = runner.run(source)
                     final xml = converter.convertTestRunResult(results)

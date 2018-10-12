@@ -6,7 +6,12 @@ A test framework, implemented as a Shared Library, that works with Jenkins/CPS
 ```groovy
 final someTestObjects = [ new TestClassA(), new TestClassB() ]
 
-testit(source: someTestObjects, destination: "TestResults.xml", publish: true)
+testit(
+  source: someTestObjects,
+  destination: "TestResults.xml",
+  publish: true,
+  onLog: { println(it) }
+)
 ```
 
 ### Parameters
@@ -15,6 +20,7 @@ testit(source: someTestObjects, destination: "TestResults.xml", publish: true)
 | source | `List<Object>` | The test classes | Required |
 | destination | `String` | The JUnit output path | `"TestResults.xml"` |
 | publish | `boolean` | Should publish results via the JUnit plugin | `true` |
+| onLog | `Closure` | A hook for logging | `null` |
 
 ### Dependencies
 [JUnit Plugin](https://plugins.jenkins.io/junit)

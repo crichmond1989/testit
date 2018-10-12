@@ -4,6 +4,7 @@ import groovy.transform.CompileStatic
 
 import java.lang.annotation.Annotation
 
+import testit.Logger
 import testit.ReflectionUtils
 import testit.StepResult
 import testit.Suite
@@ -15,31 +16,44 @@ import testit.TestResult
 import testit.TestRunner
 
 class SuiteRunner implements Serializable {
+    Logger logger
     TestRunner testRunner
 
-    SuiteRunner(TestRunner testRunner = null) {
-        this.testRunner = testRunner ?: new TestRunner()
+    TestRunner getTestRunner() {
+        final runner = this.@testRunner ?: new TestRunner()
+
+        runner.logger = this.logger
+
+        return runner
     }
 
     @CompileStatic
     SuiteResult run(Object source) {
         List<TestResult> tests = []
 
+        final suiteName = getSuiteName(source)
+
+        this.logger?.logSuiteName(suiteName)
+
         final setupResult = setup(source)
 
-        if (setupResult)
+        if (setupResult) {
             tests += setupResult
+            this.logger?.logTestResult("Suite Setup", setupResult)
+        }
 
         final testMethods = source.class.getDeclaredMethods().findAll { it.isAnnotationPresent(Test.class) }.collect { it.getName() }
         
-        tests += testMethods.collect { testRunner.run(source, it) }
+        tests += testMethods.collect { this.testRunner.run(source, it) }
 
         final teardownResult = teardown(source)
 
-        if (teardownResult)
+        if (teardownResult) {
             tests += teardownResult
+            this.logger?.logTestResult("Suite Teardown", teardownResult)
+        }
         
-        return new SuiteResult(name: getSuiteName(source), tests: tests)
+        return new SuiteResult(name: suiteName, tests: tests)
     }
 
     @CompileStatic
@@ -75,7 +89,7 @@ class SuiteRunner implements Serializable {
             return null
 
         final result = new TestResult(
-            classname: testRunner.getClassname(source),
+            classname: this.testRunner.getClassname(source),
             name: annotation.getSimpleName()
         )
 
@@ -83,6 +97,7 @@ class SuiteRunner implements Serializable {
 
         try {
             ReflectionUtils.invokeMethod(source, method)
+            result.steps += StepResult.completed()
         } catch(Throwable error) {
             result.steps += StepResult.errored(error)
         }

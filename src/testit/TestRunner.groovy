@@ -5,6 +5,7 @@ import groovy.transform.CompileStatic
 import java.lang.annotation.Annotation
 import java.util.Date
 
+import testit.Logger
 import testit.ReflectionUtils
 import testit.ResultStatus
 import testit.StepResult
@@ -14,8 +15,12 @@ import testit.TestSetup
 import testit.TestTeardown
 
 class TestRunner implements Serializable {
+    Logger logger
+
     @CompileStatic
     TestResult run(Object source, String method) {
+        this.logger?.logTestName(method)
+        
         final result = new TestResult(
             classname: getClassname(source),
             name: method
@@ -25,23 +30,32 @@ class TestRunner implements Serializable {
 
         final setupResult = setup(source)
 
-        if (setupResult)
+        if (setupResult) {
             result.steps += setupResult
 
-        if (result.getStatus() != ResultStatus.Success) {
+            this.logger?.logStepResult("Test Setup", setupResult)
+        }
+
+        if (result.status != ResultStatus.Success) {
             result.recordEnd()
             return result
         }
 
-        final bodyResults = invokeTestMethod(source, method)
+        final bodyResult = invokeTestMethod(source, method)
 
-        if (bodyResults)
-            result.steps += bodyResults
+        if (bodyResult) {
+            result.steps += bodyResult
+
+            this.logger?.logStepResult(null, bodyResult)
+        }
 
         final teardownResult = teardown(source)
 
-        if (teardownResult)
+        if (teardownResult) {
             result.steps += teardownResult
+
+            this.logger?.logStepResult("Test Teardown", teardownResult)
+        }
 
         result.recordEnd()
         return result
@@ -68,7 +82,7 @@ class TestRunner implements Serializable {
         
         try {
             ReflectionUtils.invokeMethod(source, method)
-            return null
+            return StepResult.completed()
         } catch (AssertionError error) {
             return StepResult.failed(error)
         } catch (Throwable error) {
@@ -95,7 +109,7 @@ class TestRunner implements Serializable {
 
         try {
             ReflectionUtils.invokeMethod(source, method)
-            return null
+            return StepResult.completed()
         } catch (Throwable error) {
             return StepResult.errored(error)
         }

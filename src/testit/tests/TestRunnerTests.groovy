@@ -1,7 +1,9 @@
 package testit.tests
 
+import testit.Logger
 import testit.ResultStatus
 import testit.StepCategory
+import testit.StepResult
 import testit.Suite
 import testit.SuiteClassname
 import testit.Test
@@ -9,9 +11,15 @@ import testit.TestRunner
 import testit.TestSetup
 import testit.TestTeardown
 
+import org.hamcrest.CoreMatchers
 import org.junit.Assert
 
 class TestRunnerTests implements Serializable {
+    class OnlyTestMethod {
+        @Test
+        void run() {}
+    }
+    
     class SuccessfulTestMethod {
         @Test
         void run() {}
@@ -40,6 +48,20 @@ class TestRunnerTests implements Serializable {
         @Test
         void run() {
             assert 1 == 0
+        }
+    }
+
+    class TrackLogger extends Logger {
+        List<String> trace = []
+        
+        @Override
+        void logStepResult(String name, StepResult value) {
+            trace += "logStepResult: $name".toString()
+        }
+
+        @Override
+        void logTestName(String value) {
+            trace += "logTestName: $value".toString()
         }
     }
 
@@ -99,7 +121,7 @@ class TestRunnerTests implements Serializable {
         }
     }
 
-    TestRunner runner = new TestRunner()
+    TestRunner getRunner(Logger logger = null) { new TestRunner(logger: logger) }
 
     @Test
     void run_correctClassname() {
@@ -115,6 +137,56 @@ class TestRunnerTests implements Serializable {
         final result = runner.run(source, "run")
 
         Assert.assertEquals("run", result.name)
+    }
+
+    @Test
+    void run_log_noSetup() {
+        final source = new OnlyTestMethod()
+        final _runner = getRunner(new TrackLogger())
+
+        _runner.run(source, "run")
+
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.not(CoreMatchers.hasItem("logStepResult: Test Setup")))
+    }
+
+    @Test
+    void run_log_noTeardown() {
+        final source = new OnlyTestMethod()
+        final _runner = getRunner(new TrackLogger())
+
+        _runner.run(source, "run")
+
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.not(CoreMatchers.hasItem("logStepResult: Test Teardown")))
+    }
+
+    @Test
+    void run_log_setup() {
+        final source = new TrackStages()
+        final _runner = getRunner(new TrackLogger())
+
+        _runner.run(source, "run")
+
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logStepResult: Test Setup"))
+    }
+
+    @Test
+    void run_log_teardown() {
+        final source = new TrackStages()
+        final _runner = getRunner(new TrackLogger())
+
+        _runner.run(source, "run")
+
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logStepResult: Test Teardown"))
+    }
+
+    @Test
+    void run_log_testCase() {
+        final source = new OnlyTestMethod()
+        final _runner = getRunner(new TrackLogger())
+
+        _runner.run(source, "run")
+
+        Assert.assertThat(_runner.logger.trace, CoreMatchers.hasItem("logTestName: run"))
     }
 
     @Test
@@ -215,7 +287,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulTestMethod()
         final result = runner.invokeTestMethod(source, "run")
 
-        Assert.assertNull(result)
+        Assert.assertEquals(StepCategory.Complete, result.category)
     }
 
     @Test
@@ -265,7 +337,7 @@ class TestRunnerTests implements Serializable {
         final source = new SuccessfulAnnotation()
         final result = runner.invokeByAnnotation(source, TestSetup.class)
 
-        Assert.assertNull(result)
+        Assert.assertEquals(StepCategory.Complete, result.category)
     }
 
     @Test
